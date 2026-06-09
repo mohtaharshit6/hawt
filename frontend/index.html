@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HAWT! — Premium Streetwear</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    /* Tile hover behavior is fully handled in hawt-kit.css — no overrides here */
+
+    /* ---- Best Styles cards ---- */
+    .best-styles {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+    .best-style-card {
+      position: relative;
+      aspect-ratio: 3/4;
+      overflow: hidden;
+      cursor: pointer;
+      text-decoration: none;
+      display: block;
+    }
+    .best-style-card__img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s var(--hawt-ease);
+    }
+    .best-style-card:hover .best-style-card__img { transform: scale(1.04); }
+    .best-style-card__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.65) 0%, transparent 50%);
+      display: flex; flex-direction: column; justify-content: flex-end;
+      padding: 24px 20px;
+    }
+    .best-style-card__tag {
+      font-family: var(--hawt-font-mono);
+      font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--hawt-sand); margin-bottom: 6px;
+    }
+    .best-style-card__title {
+      font-family: var(--hawt-font-display);
+      font-size: 28px; line-height: 1; letter-spacing: 0.02em;
+      text-transform: uppercase; color: var(--hawt-bone); margin-bottom: 14px;
+    }
+    .best-style-card__btn {
+      display: inline-block;
+      font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: lowercase;
+      color: var(--hawt-ink); background: var(--hawt-bone);
+      padding: 7px 16px; text-decoration: none;
+      transition: background var(--hawt-dur-fast) var(--hawt-ease), color var(--hawt-dur-fast) var(--hawt-ease);
+    }
+    .best-style-card:hover .best-style-card__btn {
+      background: var(--hawt-sand); color: var(--hawt-ink);
+    }
+
+    /* ---- 6-Tile Category Grid ---- */
+    .cat-grid6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0;
+      border-top: 1px solid var(--hawt-hairline);
+      border-bottom: 1px solid var(--hawt-hairline);
+    }
+    .cat-grid6__tile {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      text-decoration: none;
+      display: block;
+    }
+    .cat-grid6__tile + .cat-grid6__tile { border-left: 1px solid var(--hawt-hairline); }
+    .cat-grid6__img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.5s var(--hawt-ease);
+    }
+    .cat-grid6__tile:hover .cat-grid6__img { transform: scale(1.05); }
+    .cat-grid6__label {
+      position: absolute; inset: 0;
+      background: rgba(10,10,10,0.38);
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+      padding-bottom: 18px;
+      transition: background 0.3s;
+    }
+    .cat-grid6__tile:hover .cat-grid6__label { background: rgba(10,10,10,0.22); }
+    .cat-grid6__name {
+      font-family: var(--hawt-font-display);
+      font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase;
+      color: var(--hawt-bone); line-height: 1;
+    }
+
+    /* ---- Celebrity Spotlight ---- */
+    .celeb-section {
+      background: var(--hawt-ink);
+      padding: 64px 0 0;
+      overflow: hidden;
+    }
+    .celeb-head {
+      padding: 0 var(--hawt-page-x) 40px;
+    }
+    .celeb-scroll {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+      padding-bottom: 40px;
+    }
+    .celeb-scroll::-webkit-scrollbar { display: none; }
+    .celeb-card {
+      flex-shrink: 0;
+      width: 280px;
+      position: relative;
+      text-decoration: none;
+      display: block;
+      overflow: hidden;
+    }
+    .celeb-card__img {
+      width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block;
+      transition: transform 0.5s var(--hawt-ease);
+    }
+    .celeb-card:hover .celeb-card__img { transform: scale(1.03); }
+    .celeb-card__info {
+      padding: 12px 16px 0;
+    }
+    .celeb-card__name {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-sand);
+      margin-bottom: 4px;
+    }
+    .celeb-card__piece {
+      font-size: 13px; color: var(--hawt-bone); margin-bottom: 8px;
+    }
+    .celeb-card__cta {
+      font-size: 10px; letter-spacing: 0.12em; text-transform: lowercase;
+      color: var(--hawt-ash); text-decoration: none;
+    }
+    .celeb-card:hover .celeb-card__cta { color: var(--hawt-sand); }
+
+    /* ---- Brand Story ---- */
+    .brand-story {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      padding: 80px var(--hawt-page-x);
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .brand-story__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(48px, 7vw, 96px);
+      line-height: 0.9; letter-spacing: 0.02em; text-transform: uppercase;
+    }
+    .brand-story__body { font-size: 15px; line-height: 1.7; color: rgba(244,241,236,0.7); }
+    .brand-story__body p { margin: 0 0 20px; }
+    .brand-story__link { color: var(--hawt-sand); text-decoration: none; font-size: 13px; letter-spacing: 0.1em; }
+    .brand-story__link:hover { text-decoration: underline; }
+
+    /* ---- Email Signup ---- */
+    .email-signup {
+      background: var(--hawt-bone);
+      padding: 80px var(--hawt-page-x);
+      text-align: center;
+    }
+    .email-signup__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(40px, 6vw, 80px);
+      letter-spacing: 0.02em; text-transform: uppercase;
+      color: var(--hawt-ink); margin-bottom: 12px;
+    }
+    .email-signup__sub {
+      font-size: 13px; color: var(--hawt-ash); margin-bottom: 32px; letter-spacing: 0.04em;
+    }
+    .email-signup__form {
+      display: flex; justify-content: center; gap: 0; max-width: 480px; margin: 0 auto;
+    }
+    .email-signup__input {
+      flex: 1; border: 1px solid var(--hawt-hairline); background: transparent;
+      padding: 14px 18px; font-family: var(--hawt-font-body); font-size: 13px;
+      color: var(--hawt-ink); outline: none;
+      transition: border-color var(--hawt-dur-fast) var(--hawt-ease);
+    }
+    .email-signup__input:focus { border-color: var(--hawt-ink); }
+    .email-signup__input::placeholder { color: var(--hawt-ash); }
+    .email-signup__btn {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      border: 1px solid var(--hawt-ink); padding: 14px 24px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: lowercase;
+      cursor: pointer; white-space: nowrap;
+      transition: background var(--hawt-dur-fast) var(--hawt-ease);
+    }
+    .email-signup__btn:hover { background: var(--hawt-ash); border-color: var(--hawt-ash); }
+
+    @media (max-width: 960px) {
+      .best-styles { grid-template-columns: repeat(2, 1fr); }
+      .cat-grid6 { grid-template-columns: repeat(3, 1fr); }
+      .cat-grid6__tile + .cat-grid6__tile { border-left: none; }
+      .cat-grid6__tile:nth-child(n+2) { border-left: 1px solid var(--hawt-hairline); }
+      .cat-grid6__tile:nth-child(4) { border-left: none; }
+      .brand-story { grid-template-columns: 1fr; gap: 40px; }
+    }
+    @media (max-width: 600px) {
+      .best-styles { grid-template-columns: repeat(2, 1fr); }
+      .cat-grid6 { grid-template-columns: repeat(2, 1fr); }
+      .email-signup__form { flex-direction: column; }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="home">
+
+  <!-- HEADER WRAP -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-bone);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" class="hawt-header__nav-link" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" class="hawt-header__nav-link" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" onclick="alert('search coming soon')" aria-label="search">
+          <span id="icon-search"></span>
+        </button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist">
+          <span id="icon-heart"></span>
+        </button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" title="my account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account">
+          <span id="icon-user"></span>
+        </a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <!-- SECONDARY NAV ROW -->
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <section class="hawt-hero">
+    <img class="hawt-hero__bg"
+      src="https://images.unsplash.com/photo-1503342217505-b0a15ec3261c?w=1800&q=80&auto=format&fit=crop"
+      alt="">
+    <div class="hawt-hero__scrim"></div>
+    <div class="hawt-hero__content hawt-reveal">
+      <div class="hawt-hero__eyebrow">— drop / 03 · live now</div>
+      <h1 class="hawt-hero__title">
+        heavyweight<br>
+        <span class="hawt-accent">season</span>
+      </h1>
+      <p class="hawt-hero__sub">
+        the second drop is live. 240 gsm fleece, boxed shoulders,
+        built to outlive the trend.
+      </p>
+      <div class="hawt-hero__cta">
+        <a href="./shop.html" class="hawt-btn hawt-btn--primary hawt-on-ink">shop the drop</a>
+        <a href="./shop.html" class="hawt-link hawt-link--light">see the lookbook →</a>
+      </div>
+    </div>
+    <div class="hawt-hero__counter">
+      <span>01 / 12</span>
+      <span>HAWT.CO</span>
+    </div>
+  </section>
+
+  <!-- OUR BEST STYLES -->
+  <section class="hawt-section hawt-section--bone" style="padding-bottom:0;">
+    <div class="hawt-section__head hawt-reveal" style="padding-bottom:32px;">
+      <div class="hawt-meta">— curated for you</div>
+      <h2 class="hawt-display-xl">our best styles</h2>
+    </div>
+    <div class="best-styles">
+      <a href="./shop.html?cat=Dresses" class="best-style-card hawt-reveal">
+        <img class="best-style-card__img" src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=700&q=80&auto=format&fit=crop" alt="Power Dressing" loading="lazy">
+        <div class="best-style-card__overlay">
+          <div class="best-style-card__tag">— curated look</div>
+          <div class="best-style-card__title">Power Dressing</div>
+          <span class="best-style-card__btn">shop now →</span>
+        </div>
+      </a>
+      <a href="./shop.html?cat=Co-ords" class="best-style-card hawt-reveal">
+        <img class="best-style-card__img" src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=700&q=80&auto=format&fit=crop" alt="Effortless Casual" loading="lazy">
+        <div class="best-style-card__overlay">
+          <div class="best-style-card__tag">— relaxed fit</div>
+          <div class="best-style-card__title">Effortless Casual</div>
+          <span class="best-style-card__btn">shop now →</span>
+        </div>
+      </a>
+      <a href="./shop.html?cat=Bottoms" class="best-style-card hawt-reveal">
+        <img class="best-style-card__img" src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=700&q=80&auto=format&fit=crop" alt="Statement Pieces" loading="lazy">
+        <div class="best-style-card__overlay">
+          <div class="best-style-card__tag">— drop / 03</div>
+          <div class="best-style-card__title">Statement Pieces</div>
+          <span class="best-style-card__btn">shop now →</span>
+        </div>
+      </a>
+      <a href="./shop.html" class="best-style-card hawt-reveal">
+        <img class="best-style-card__img" src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=700&q=80&auto=format&fit=crop" alt="Weekend Fits" loading="lazy">
+        <div class="best-style-card__overlay">
+          <div class="best-style-card__tag">— off-duty</div>
+          <div class="best-style-card__title">Weekend Fits</div>
+          <span class="best-style-card__btn">shop now →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- 6-TILE CATEGORY GRID -->
+  <section class="cat-grid6" aria-label="shop by category">
+    <a href="./shop.html?cat=New%20In" class="cat-grid6__tile">
+      <img class="cat-grid6__img" src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500&q=80&auto=format&fit=crop" alt="New In" loading="lazy">
+      <div class="cat-grid6__label"><span class="cat-grid6__name">New In</span></div>
+    </a>
+    <a href="./shop.html?cat=Sale" class="cat-grid6__tile">
+      <img class="cat-grid6__img" src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&q=80&auto=format&fit=crop" alt="Sale" loading="lazy">
+      <div class="cat-grid6__label"><span class="cat-grid6__name">Sale</span></div>
+    </a>
+    <a href="./shop.html?cat=Dresses" class="cat-grid6__tile">
+      <img class="cat-grid6__img" src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=500&q=80&auto=format&fit=crop" alt="Dresses" loading="lazy">
+      <div class="cat-grid6__label"><span class="cat-grid6__name">Dresses</span></div>
+    </a>
+    <a href="./shop.html?cat=Shirts" class="cat-grid6__tile">
+      <img class="cat-grid6__img" src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=500&q=80&auto=format&fit=crop" alt="Shirts" loading="lazy">
+      <div class="cat-grid6__label"><span class="cat-grid6__name">Shirts</span></div>
+    </a>
+    <a href="./shop.html?cat=Bottoms" class="cat-grid6__tile">
+      <img class="cat-grid6__img" src="https://images.unsplash.com/photo-1542272604-787c3835535d?w=500&q=80&auto=format&fit=crop" alt="Bottoms" loading="lazy">
+      <div class="cat-grid6__label"><span class="cat-grid6__name">Bottoms</span></div>
+    </a>
+    <a href="./shop.html?cat=Co-ords" class="cat-grid6__tile">
+      <img class="cat-grid6__img" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=500&q=80&auto=format&fit=crop" alt="Co-Ords" loading="lazy">
+      <div class="cat-grid6__label"><span class="cat-grid6__name">Co-Ords</span></div>
+    </a>
+  </section>
+
+  <!-- FEATURED COLLECTION -->
+  <section class="hawt-section hawt-section--bone">
+    <div class="hawt-section__head hawt-reveal">
+      <div class="hawt-meta">— curated collection · drop / 03</div>
+      <h2 class="hawt-display-xl">the line</h2>
+    </div>
+    <div id="featured-grid" class="hawt-grid hawt-grid--4">
+      <!-- injected by home.js -->
+    </div>
+    <div class="hawt-section__foot">
+      <a href="./shop.html" class="hawt-btn hawt-btn--secondary">see everything</a>
+    </div>
+  </section>
+
+  <!-- CELEBRITY SPOTLIGHT -->
+  <section class="celeb-section">
+    <div class="celeb-head hawt-reveal">
+      <div class="hawt-meta hawt-meta--light">— spotted in the wild</div>
+      <h2 class="hawt-display-xl hawt-on-ink" style="color:var(--hawt-bone);">celebrity spotlight</h2>
+    </div>
+    <div class="celeb-scroll">
+      <a href="./product.html" class="celeb-card">
+        <img class="celeb-card__img" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=560&q=80&auto=format&fit=crop" alt="" loading="lazy">
+        <div class="celeb-card__info">
+          <div class="celeb-card__name">editorial pick</div>
+          <div class="celeb-card__piece">Oversized Ink Tee</div>
+          <span class="celeb-card__cta">shop this look →</span>
+        </div>
+      </a>
+      <a href="./product.html" class="celeb-card">
+        <img class="celeb-card__img" src="https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=560&q=80&auto=format&fit=crop" alt="" loading="lazy">
+        <div class="celeb-card__info">
+          <div class="celeb-card__name">street style</div>
+          <div class="celeb-card__piece">Bone Linen Set</div>
+          <span class="celeb-card__cta">shop this look →</span>
+        </div>
+      </a>
+      <a href="./product.html" class="celeb-card">
+        <img class="celeb-card__img" src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=560&q=80&auto=format&fit=crop" alt="" loading="lazy">
+        <div class="celeb-card__info">
+          <div class="celeb-card__name">off-duty</div>
+          <div class="celeb-card__piece">Drop Shoulder Hoodie</div>
+          <span class="celeb-card__cta">shop this look →</span>
+        </div>
+      </a>
+      <a href="./product.html" class="celeb-card">
+        <img class="celeb-card__img" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=560&q=80&auto=format&fit=crop" alt="" loading="lazy">
+        <div class="celeb-card__info">
+          <div class="celeb-card__name">studio session</div>
+          <div class="celeb-card__piece">Cargo Trousers</div>
+          <span class="celeb-card__cta">shop this look →</span>
+        </div>
+      </a>
+      <a href="./product.html" class="celeb-card">
+        <img class="celeb-card__img" src="https://images.unsplash.com/photo-1504703395950-b89145a5425b?w=560&q=80&auto=format&fit=crop" alt="" loading="lazy">
+        <div class="celeb-card__info">
+          <div class="celeb-card__name">front row</div>
+          <div class="celeb-card__piece">Structured Blazer</div>
+          <span class="celeb-card__cta">shop this look →</span>
+        </div>
+      </a>
+      <a href="./product.html" class="celeb-card">
+        <img class="celeb-card__img" src="https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=560&q=80&auto=format&fit=crop" alt="" loading="lazy">
+        <div class="celeb-card__info">
+          <div class="celeb-card__name">rooftop vibes</div>
+          <div class="celeb-card__piece">Sand Linen Shirt</div>
+          <span class="celeb-card__cta">shop this look →</span>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <!-- BRAND STORY -->
+  <section class="brand-story hawt-reveal">
+    <div>
+      <div class="hawt-meta hawt-meta--light" style="margin-bottom:16px;">— the hawt story</div>
+      <h2 class="brand-story__title">welcome<br>to<br><span style="color:var(--hawt-sand)">hawt!</span></h2>
+    </div>
+    <div class="brand-story__body">
+      <p>Born in Kolkata — HAWT! is a streetwear label built on small drops, finite runs, and a belief that real style doesn't need a restock.</p>
+      <p>Every piece is 240+ gsm, every drop is numbered, and nothing goes on sale. When it's gone, it's gone. That's the whole point.</p>
+      <a href="./shop.html" class="brand-story__link">read our story →</a>
+    </div>
+  </section>
+
+  <!-- EMAIL SIGNUP -->
+  <section class="email-signup">
+    <div class="hawt-meta" style="margin-bottom:12px;">— stay in the loop</div>
+    <h2 class="email-signup__title">first to know.</h2>
+    <p class="email-signup__sub">drops, restocks, early access. nothing else.</p>
+    <form class="email-signup__form" onsubmit="handleSignup(event)">
+      <input class="email-signup__input" type="email" placeholder="your@email.com" required id="signup-email">
+      <button class="email-signup__btn" type="submit" id="signup-btn">notify me</button>
+    </form>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#sustainability">sustainability</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#terms-conditions">terms &amp; conditions</a>
+        <a href="/legal.html#refund-policy">refund policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#franchise-enquiry">franchise enquiry</a>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#events">events</a>
+        <a href="/support.html#store-locations">store locations</a>
+        <a href="/about.html#lookbook">lookbook</a>
+        <a href="/about.html#our-story">press</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="./shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <!-- CART DRAWER -->
+  <div id="cart-scrim" class="hawt-cart__scrim"></div>
+  <aside id="cart-drawer" class="hawt-cart" aria-label="shopping bag">
+    <header class="hawt-cart__head">
+      <div>
+        <div class="hawt-meta">— your bag</div>
+        <div id="cart-title" class="hawt-cart__title">bag's empty.</div>
+      </div>
+      <button id="cart-close" class="hawt-cart__close" aria-label="close cart">
+        <span id="icon-x"></span>
+      </button>
+    </header>
+    <div id="cart-body" class="hawt-cart__body"></div>
+    <footer id="cart-footer" class="hawt-cart__foot"></footer>
+  </aside>
+
+  <style>
+    .hawt-header__nav a { display:inline-block; position:relative; }
+    .hawt-header__nav a::after { content:''; position:absolute; left:0; bottom:-4px; height:1px; width:0; background:currentColor; transition:width var(--hawt-dur-base) var(--hawt-ease); }
+    .hawt-header__nav a:hover::after { width:100%; }
+  </style>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script>
+    document.getElementById('icon-search').innerHTML = icon('search', 18);
+    document.getElementById('icon-heart').innerHTML  = icon('heart', 18);
+    document.getElementById('icon-bag').innerHTML    = icon('shopping-bag', 18);
+    document.getElementById('icon-user').innerHTML   = icon('user', 18);
+    document.getElementById('icon-x').innerHTML      = icon('x', 20);
+
+    function handleSignup(e) {
+      e.preventDefault();
+      const btn = document.getElementById('signup-btn');
+      const inp = document.getElementById('signup-email');
+      btn.textContent = "you're in ✓";
+      btn.disabled = true;
+      inp.value = '';
+      inp.placeholder = "subscribed!";
+      inp.disabled = true;
+    }
+  </script>
+  <script src="./js/header.js"></script>
+  <script src="./js/home.js"></script>
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">�</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
+  </div>
+</body>
+</html>

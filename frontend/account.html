@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Account — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .acct-page { max-width: 960px; margin: 0 auto; padding: 60px var(--hawt-page-x) 120px; }
+
+    /* Hero */
+    .acct-hero { margin-bottom: 56px; padding-bottom: 40px; border-bottom: 1px solid var(--hawt-hairline); display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; flex-wrap: wrap; }
+    .acct-hero__label { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--hawt-ash); margin-bottom: 10px; }
+    .acct-hero__name { font-family: var(--hawt-font-display); font-size: clamp(52px, 8vw, 96px); text-transform: uppercase; letter-spacing: -0.01em; line-height: 0.9; font-weight: 400; margin: 0; }
+    .acct-hero__email { font-size: 12px; color: var(--hawt-ash); margin-top: 12px; letter-spacing: 0.04em; }
+    .acct-hero__since { font-family: var(--hawt-font-mono); font-size: 10px; color: var(--hawt-ash); margin-top: 6px; letter-spacing: 0.1em; }
+
+    /* Cards grid */
+    .acct-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--hawt-hairline); margin-bottom: 1px; }
+    .acct-card { background: var(--hawt-bone); padding: 32px 28px; text-decoration: none; color: var(--hawt-ink); display: flex; flex-direction: column; gap: 0; transition: background 0.15s, color 0.15s; position: relative; min-height: 160px; }
+    .acct-card:hover { background: var(--hawt-ink); color: var(--hawt-bone); }
+    .acct-card--disabled { cursor: default; opacity: 0.55; }
+    .acct-card--disabled:hover { background: var(--hawt-bone); color: var(--hawt-ink); }
+    .acct-card__icon { font-size: 24px; margin-bottom: 18px; line-height: 1; }
+    .acct-card__title { font-family: var(--hawt-font-display); font-size: 22px; text-transform: uppercase; letter-spacing: 0.03em; line-height: 1; margin-bottom: 8px; }
+    .acct-card__desc { font-size: 11px; color: var(--hawt-ash); letter-spacing: 0.04em; line-height: 1.5; flex: 1; }
+    .acct-card:hover .acct-card__desc { color: rgba(244,241,236,0.55); }
+    .acct-card__arrow { position: absolute; bottom: 20px; right: 24px; opacity: 0; transition: opacity 0.15s; }
+    .acct-card:hover .acct-card__arrow { opacity: 1; }
+    .acct-card__badge { display: inline-block; font-family: var(--hawt-font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; background: var(--hawt-ink); color: var(--hawt-bone); margin-top: 10px; align-self: flex-start; }
+    .acct-card:hover .acct-card__badge { background: var(--hawt-sand); color: var(--hawt-ink); }
+
+    /* Sign out row */
+    .acct-signout { background: var(--hawt-hairline); padding: 1px; }
+    .acct-signout__inner { background: var(--hawt-bone); padding: 24px 28px; display: flex; align-items: center; justify-content: space-between; }
+    .acct-signout__label { font-size: 12px; color: var(--hawt-ash); }
+    .acct-signout__btn { font-family: var(--hawt-font-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; background: transparent; border: 1px solid var(--hawt-ink); padding: 10px 20px; cursor: pointer; color: var(--hawt-ink); transition: background 0.15s, color 0.15s; }
+    .acct-signout__btn:hover { background: var(--hawt-ink); color: var(--hawt-bone); }
+
+    @media (max-width: 700px) {
+      .acct-grid { grid-template-columns: repeat(2, 1fr); }
+      .acct-hero { flex-direction: column; align-items: flex-start; }
+    }
+    @media (max-width: 420px) {
+      .acct-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="account">
+
+  <div id="header-wrap" class="hawt-header-wrap">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background:transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In"    style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale"        style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses"     style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts"      style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms"     style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords"     style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button class="hawt-header__bag" aria-label="bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon"
+           style="text-decoration:none;color:inherit;" aria-label="account">
+          <span id="icon-user"></span>
+        </a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./account.html" class="hawt-subnav__link" style="color:var(--hawt-ink);">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <div class="acct-page">
+    <!-- Hero -->
+    <div class="acct-hero">
+      <div>
+        <div class="acct-hero__label">— my account</div>
+        <h1 class="acct-hero__name" id="acct-name">loading.</h1>
+        <div class="acct-hero__email" id="acct-email"></div>
+        <div class="acct-hero__since" id="acct-since"></div>
+      </div>
+    </div>
+
+    <!-- Cards -->
+    <div class="acct-grid" id="acct-grid">
+
+      <a href="./orders.html" class="acct-card">
+        <div class="acct-card__icon">📦</div>
+        <div class="acct-card__title">My Orders</div>
+        <div class="acct-card__desc">Track deliveries, view past purchases, request returns.</div>
+        <span class="acct-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="#" class="acct-card acct-card--disabled" onclick="return false;">
+        <div class="acct-card__icon">🤍</div>
+        <div class="acct-card__title">Wishlist</div>
+        <div class="acct-card__desc">Pieces you've saved for later.</div>
+        <span class="acct-card__badge">coming soon</span>
+        <span class="acct-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="#" class="acct-card acct-card--disabled" onclick="return false;">
+        <div class="acct-card__icon">📍</div>
+        <div class="acct-card__title">Address Book</div>
+        <div class="acct-card__desc">Saved delivery addresses for faster checkout.</div>
+        <span class="acct-card__badge">coming soon</span>
+        <span class="acct-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="#" class="acct-card acct-card--disabled" onclick="return false;">
+        <div class="acct-card__icon">🎁</div>
+        <div class="acct-card__title">Refer & Earn</div>
+        <div class="acct-card__desc">Share HAWT! with friends. Get ₹200 when they order.</div>
+        <span class="acct-card__badge">coming soon</span>
+        <span class="acct-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="#" class="acct-card acct-card--disabled" onclick="return false;">
+        <div class="acct-card__icon">💬</div>
+        <div class="acct-card__title">Help Center</div>
+        <div class="acct-card__desc">FAQs, returns policy, sizing guides, contact support.</div>
+        <span class="acct-card__badge">coming soon</span>
+        <span class="acct-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+      <a href="#" class="acct-card acct-card--disabled" onclick="return false;">
+        <div class="acct-card__icon">⚙️</div>
+        <div class="acct-card__title">Settings</div>
+        <div class="acct-card__desc">Email preferences, password, notification settings.</div>
+        <span class="acct-card__badge">coming soon</span>
+        <span class="acct-card__arrow" aria-hidden="true">→</span>
+      </a>
+
+    </div>
+
+    <!-- Sign out -->
+    <div class="acct-signout">
+      <div class="acct-signout__inner">
+        <span class="acct-signout__label">done for now?</span>
+        <button class="acct-signout__btn" onclick="Auth.logout()">sign out →</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script>
+    // Guard: redirect to login if not authenticated
+    if (!API.isLoggedIn()) {
+      window.location.href = './auth.html?redirect=account.html';
+    }
+
+    document.getElementById('icon-bag').innerHTML  = icon('shopping-bag', 18);
+    document.getElementById('icon-user').innerHTML = icon('user', 18);
+
+    window.addEventListener('scroll', () => {
+      const h = document.getElementById('main-header');
+      if (!h) return;
+      const s = window.scrollY > 32;
+      h.style.backdropFilter = s ? 'blur(20px)' : 'none';
+      h.style.background = s ? 'var(--hawt-bone-blur)' : 'transparent';
+    }, { passive: true });
+
+    Cart.updateBadge();
+
+    // Populate user info
+    const user = API.getUser();
+    if (user) {
+      document.getElementById('acct-name').textContent  = user.name + '.';
+      document.getElementById('acct-email').textContent = user.email;
+      if (user.created_at) {
+        const joined = new Date(user.created_at).toLocaleDateString('en-IN', { month: 'long', year: 'numeric' });
+        document.getElementById('acct-since').textContent = 'member since ' + joined;
+      }
+    }
+  </script>
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">&times;</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
+  </div>
+</body>
+</html>

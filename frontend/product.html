@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .hawt-tile:hover .hawt-tile__img--main { opacity: 0; }
+    .hawt-tile:hover .hawt-tile__img--alt  { opacity: 1; }
+    .hawt-tile__img--main, .hawt-tile__img--alt {
+      transition: opacity var(--hawt-dur-image) var(--hawt-ease), transform var(--hawt-dur-image) var(--hawt-ease);
+    }
+    .hawt-pdp__gallery { display: flex; gap: 12px; }
+    .hawt-pdp__thumbs { display: flex; flex-direction: column; gap: 8px; width: 80px; flex-shrink: 0; }
+    .hawt-pdp__thumb { width: 80px; height: 100px; overflow: hidden; background: var(--hawt-pure); border: 2px solid transparent; cursor: pointer; padding: 0; }
+    .hawt-pdp__thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .hawt-pdp__thumb.is-sel { border-color: var(--hawt-ink); }
+    .hawt-pdp__shots { flex: 1; }
+    .hawt-pdp__shot { display: none; }
+    .hawt-pdp__shot.is-active { display: block; }
+    .hawt-pdp__price-row { display: flex; align-items: baseline; gap: 16px; margin-bottom: 28px; }
+    .hawt-pdp__tax { font-size: 11px; color: var(--hawt-ash); }
+    .hawt-pdp__size-label { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-ash); font-weight: 500; }
+    .hawt-pdp__pin { margin: 20px 0; }
+    .hawt-pdp__pin form { display: flex; gap: 8px; align-items: center; border-bottom: 1px solid var(--hawt-hairline); padding-bottom: 12px; }
+    .hawt-pdp__pin input { background: transparent; border: 0; outline: none; font-family: var(--hawt-font-body); font-size: 14px; color: var(--hawt-ink); flex: 1; }
+    .hawt-pdp__pin input::placeholder { color: var(--hawt-ash); }
+    .hawt-pdp__pin button { background: transparent; border: 0; font-size: 12px; letter-spacing: 0.14em; text-transform: lowercase; color: var(--hawt-ink); cursor: pointer; font-weight: 500; }
+    .hawt-pdp__pin-result { font-size: 12px; color: var(--hawt-ash); margin-top: 6px; }
+    .hawt-pdp__desc { margin: 28px 0 8px; }
+    .related-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
+    @media (max-width: 960px) { .related-grid { grid-template-columns: repeat(2,1fr); } }
+  </style>
+</head>
+<body class="hawt" data-page="product">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" aria-label="search"><span id="icon-search"></span></button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist"><span id="icon-heart"></span></button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account"><span id="icon-user"></span></a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <!-- SECONDARY NAV ROW -->
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- PDP CONTENT (injected by product.js) -->
+  <div id="pdp-root" class="hawt-pdp">
+    <div style="padding: 120px var(--hawt-page-x); text-align:center; color: var(--hawt-ash);">loading...</div>
+  </div>
+
+  <!-- CART DRAWER -->
+  <div id="cart-scrim" class="hawt-cart__scrim"></div>
+  <aside id="cart-drawer" class="hawt-cart" aria-label="shopping bag">
+    <header class="hawt-cart__head">
+      <div>
+        <div class="hawt-meta">— your bag</div>
+        <div id="cart-title" class="hawt-cart__title">bag's empty.</div>
+      </div>
+      <button id="cart-close" class="hawt-cart__close" aria-label="close"><span id="icon-x"></span></button>
+    </header>
+    <div id="cart-body" class="hawt-cart__body"></div>
+    <footer id="cart-footer" class="hawt-cart__foot"></footer>
+  </aside>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script>
+    document.getElementById('icon-search').innerHTML = icon('search', 18);
+    document.getElementById('icon-heart').innerHTML  = icon('heart', 18);
+    document.getElementById('icon-bag').innerHTML    = icon('shopping-bag', 18);
+    document.getElementById('icon-user').innerHTML   = icon('user', 18);
+    document.getElementById('icon-x').innerHTML      = icon('x', 20);
+  </script>
+  <script src="./js/header.js"></script>
+  <script src="./js/product.js"></script>
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">�</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
+  </div>
+</body>
+</html>

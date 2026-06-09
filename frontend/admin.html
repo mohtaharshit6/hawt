@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--hawt-font-body); background: #f0ede8; color: var(--hawt-ink); min-height: 100vh; }
+
+    /* ── Top bar ── */
+    .adm-bar { background: var(--hawt-ink); color: var(--hawt-bone); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; height: 52px; position: sticky; top: 0; z-index: 100; }
+    .adm-bar__brand { font-family: var(--hawt-font-display); font-size: 22px; letter-spacing: 0.04em; }
+    .adm-bar__brand span { color: var(--hawt-sand); }
+    .adm-bar__right { display: flex; align-items: center; gap: 20px; }
+    .adm-bar__user { font-size: 11px; color: rgba(244,241,236,0.6); letter-spacing: 0.08em; }
+    .adm-btn-sm { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; background: transparent; border: 1px solid rgba(244,241,236,0.3); color: var(--hawt-bone); padding: 6px 14px; cursor: pointer; transition: border-color .15s, background .15s; }
+    .adm-btn-sm:hover { border-color: var(--hawt-bone); background: rgba(244,241,236,0.1); }
+
+    /* ── Layout ── */
+    .adm-wrap { max-width: 1400px; margin: 0 auto; padding: 32px 24px 80px; }
+
+    /* ── Page header ── */
+    .adm-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; flex-wrap: wrap; gap: 12px; }
+    .adm-head__title { font-family: var(--hawt-font-display); font-size: 36px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .adm-head__count { font-family: var(--hawt-font-mono); font-size: 11px; color: var(--hawt-ash); margin-top: 4px; }
+
+    /* ── Primary button ── */
+    .adm-btn { font-family: var(--hawt-font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; background: var(--hawt-ink); color: var(--hawt-bone); border: none; padding: 12px 24px; cursor: pointer; transition: background .15s; }
+    .adm-btn:hover { background: #222; }
+    .adm-btn--danger { background: #c0392b; }
+    .adm-btn--danger:hover { background: #a93226; }
+    .adm-btn--ghost { background: transparent; color: var(--hawt-ink); border: 1px solid var(--hawt-ink); }
+    .adm-btn--ghost:hover { background: var(--hawt-ink); color: var(--hawt-bone); }
+
+    /* ── Stats row ── */
+    .adm-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .adm-stat { background: var(--hawt-bone); padding: 20px 24px; border: 1px solid var(--hawt-hairline); }
+    .adm-stat__label { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-ash); margin-bottom: 8px; }
+    .adm-stat__val { font-family: var(--hawt-font-display); font-size: 32px; letter-spacing: 0.02em; }
+    @media (max-width: 700px) { .adm-stats { grid-template-columns: repeat(2,1fr); } }
+
+    /* ── Filter bar ── */
+    .adm-filters { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+    .adm-filter { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px solid var(--hawt-hairline); background: var(--hawt-bone); padding: 7px 14px; cursor: pointer; transition: .12s; color: var(--hawt-ash); }
+    .adm-filter.is-sel { background: var(--hawt-ink); color: var(--hawt-bone); border-color: var(--hawt-ink); }
+    .adm-search { margin-left: auto; border: 1px solid var(--hawt-hairline); background: var(--hawt-bone); padding: 8px 14px; font-family: var(--hawt-font-body); font-size: 12px; width: 220px; outline: none; }
+    .adm-search:focus { border-color: var(--hawt-ink); }
+
+    /* ── Product table ── */
+    .adm-table-wrap { background: var(--hawt-bone); border: 1px solid var(--hawt-hairline); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; }
+    thead { border-bottom: 2px solid var(--hawt-hairline); }
+    th { font-family: var(--hawt-font-mono); font-size: 9px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--hawt-ash); padding: 14px 16px; text-align: left; white-space: nowrap; }
+    td { padding: 12px 16px; border-bottom: 1px solid var(--hawt-hairline); font-size: 13px; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: rgba(0,0,0,0.02); }
+
+    .adm-thumb { width: 48px; height: 56px; object-fit: cover; display: block; background: var(--hawt-hairline); }
+    .adm-thumb-wrap { position: relative; width: 48px; flex-shrink: 0; }
+    .adm-thumb-upload { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: none; align-items: center; justify-content: center; cursor: pointer; font-size: 18px; }
+    .adm-thumb-wrap:hover .adm-thumb-upload { display: flex; }
+
+    .adm-badge { display: inline-block; font-family: var(--hawt-font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; }
+    .adm-badge--active { background: #e8f5e9; color: #2e7d32; }
+    .adm-badge--inactive { background: #fbe9e7; color: #c62828; }
+
+    .adm-actions { display: flex; gap: 8px; }
+    .adm-icon-btn { border: none; background: transparent; cursor: pointer; padding: 6px; font-size: 14px; color: var(--hawt-ash); transition: color .12s; }
+    .adm-icon-btn:hover { color: var(--hawt-ink); }
+    .adm-icon-btn--danger:hover { color: #c0392b; }
+
+    /* ── Drawer ── */
+    .adm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; display: none; }
+    .adm-overlay.is-open { display: block; }
+    .adm-drawer { position: fixed; right: 0; top: 0; bottom: 0; width: min(560px, 100vw); background: var(--hawt-bone); z-index: 201; transform: translateX(100%); transition: transform .3s cubic-bezier(.22,1,.36,1); overflow-y: auto; display: flex; flex-direction: column; }
+    .adm-drawer.is-open { transform: translateX(0); }
+    .adm-drawer__head { padding: 24px 28px 20px; border-bottom: 1px solid var(--hawt-hairline); display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; background: var(--hawt-bone); z-index: 1; }
+    .adm-drawer__title { font-family: var(--hawt-font-display); font-size: 24px; text-transform: uppercase; }
+    .adm-drawer__close { border: none; background: transparent; font-size: 22px; cursor: pointer; color: var(--hawt-ash); line-height: 1; }
+    .adm-drawer__body { padding: 28px; flex: 1; }
+    .adm-drawer__foot { padding: 20px 28px; border-top: 1px solid var(--hawt-hairline); display: flex; gap: 12px; position: sticky; bottom: 0; background: var(--hawt-bone); }
+
+    /* ── Form fields ── */
+    .adm-field { margin-bottom: 18px; }
+    .adm-label { display: block; font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-ash); margin-bottom: 6px; }
+    .adm-input { width: 100%; border: 1px solid var(--hawt-hairline); background: #fff; padding: 10px 12px; font-family: var(--hawt-font-body); font-size: 13px; outline: none; }
+    .adm-input:focus { border-color: var(--hawt-ink); }
+    .adm-select { width: 100%; border: 1px solid var(--hawt-hairline); background: #fff; padding: 10px 12px; font-family: var(--hawt-font-body); font-size: 13px; outline: none; cursor: pointer; }
+    .adm-row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .adm-textarea { width: 100%; border: 1px solid var(--hawt-hairline); background: #fff; padding: 10px 12px; font-family: var(--hawt-font-body); font-size: 13px; outline: none; resize: vertical; min-height: 80px; }
+    .adm-textarea:focus { border-color: var(--hawt-ink); }
+
+    /* ── Image upload in form ── */
+    .adm-img-preview { width: 100%; height: 180px; object-fit: cover; display: block; background: var(--hawt-hairline); margin-bottom: 10px; }
+    .adm-file-label { display: inline-block; font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; border: 1px dashed var(--hawt-ash); padding: 10px 20px; cursor: pointer; color: var(--hawt-ash); transition: .15s; }
+    .adm-file-label:hover { border-color: var(--hawt-ink); color: var(--hawt-ink); }
+    input[type=file] { display: none; }
+
+    /* ── Sizes table ── */
+    .adm-sizes { width: 100%; border-collapse: collapse; margin-top: 8px; }
+    .adm-sizes th, .adm-sizes td { font-size: 12px; padding: 6px 10px; border: 1px solid var(--hawt-hairline); }
+    .adm-sizes th { font-family: var(--hawt-font-mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hawt-ash); background: #f8f6f2; }
+    .adm-sizes input { border: none; width: 100%; font-size: 12px; padding: 2px 4px; background: transparent; outline: none; }
+    .adm-add-size { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; border: 1px dashed var(--hawt-ash); background: transparent; padding: 6px 12px; cursor: pointer; color: var(--hawt-ash); margin-top: 8px; }
+    .adm-add-size:hover { border-color: var(--hawt-ink); color: var(--hawt-ink); }
+
+    /* ── Toast ── */
+    .adm-toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(60px); background: var(--hawt-ink); color: var(--hawt-bone); font-family: var(--hawt-font-mono); font-size: 11px; letter-spacing: 0.1em; padding: 12px 24px; z-index: 300; transition: transform .25s cubic-bezier(.22,1,.36,1); pointer-events: none; white-space: nowrap; }
+    .adm-toast.is-show { transform: translateX(-50%) translateY(0); }
+    .adm-toast--err { background: #c0392b; }
+
+    .adm-empty { text-align: center; padding: 60px 20px; color: var(--hawt-ash); font-size: 14px; }
+
+    /* ── Toggle switches ── */
+    .adm-toggles { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+    .adm-toggle-btn { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border: 1px solid var(--hawt-hairline); background: var(--hawt-bone); cursor: pointer; font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--hawt-ash); transition: .15s; user-select: none; }
+    .adm-toggle-btn.is-on { background: var(--hawt-ink); color: var(--hawt-bone); border-color: var(--hawt-ink); }
+    .adm-toggle-btn .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; opacity: 0.5; }
+    .adm-toggle-btn.is-on .toggle-dot { opacity: 1; }
+    .adm-discount-row { display: none; margin-bottom: 18px; }
+    .adm-discount-row.is-vis { display: block; }
+    .adm-disc-hint { font-family: var(--hawt-font-mono); font-size: 10px; color: var(--hawt-ash); margin-top: 4px; }
+
+    /* ── Flag badges in table ── */
+    .adm-flag { display: inline-block; font-family: var(--hawt-font-mono); font-size: 8px; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 6px; margin-left: 4px; background: #fff3e0; color: #e65100; border-radius: 2px; }
+    .adm-flag--sale { background: #fce4ec; color: #c62828; }
+    .adm-flag--new  { background: #e8f5e9; color: #2e7d32; }
+    .adm-flag--clear { background: #ede7f6; color: #4527a0; }
+  </style>
+</head>
+<body>
+
+<!-- Top bar -->
+<div class="adm-bar">
+  <div class="adm-bar__brand">HAWT<span>!</span> Admin</div>
+  <div class="adm-bar__right">
+    <span class="adm-bar__user" id="bar-user"></span>
+    <button class="adm-btn-sm" onclick="goToSite()">← live site</button>
+    <button class="adm-btn-sm" onclick="signOut()">sign out</button>
+  </div>
+</div>
+
+<div class="adm-wrap">
+
+  <!-- Page header -->
+  <div class="adm-head">
+    <div>
+      <div class="adm-head__title">Products</div>
+      <div class="adm-head__count" id="prod-count">loading…</div>
+    </div>
+    <button class="adm-btn" onclick="openDrawer(null)">+ Add Product</button>
+  </div>
+
+  <!-- Stats -->
+  <div class="adm-stats">
+    <div class="adm-stat"><div class="adm-stat__label">Total</div><div class="adm-stat__val" id="stat-total">—</div></div>
+    <div class="adm-stat"><div class="adm-stat__label">Active</div><div class="adm-stat__val" id="stat-active">—</div></div>
+    <div class="adm-stat"><div class="adm-stat__label">Inactive</div><div class="adm-stat__val" id="stat-inactive">—</div></div>
+    <div class="adm-stat"><div class="adm-stat__label">Categories</div><div class="adm-stat__val" id="stat-cats">—</div></div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="adm-filters">
+    <button class="adm-filter is-sel" data-cat="all" onclick="setFilter('all',this)">All</button>
+    <button class="adm-filter" data-cat="active" onclick="setFilter('active',this)">Active</button>
+    <button class="adm-filter" data-cat="inactive" onclick="setFilter('inactive',this)">Inactive</button>
+    <button class="adm-filter" data-cat="Dresses" onclick="setFilter('Dresses',this)">Dresses</button>
+    <button class="adm-filter" data-cat="Shirts" onclick="setFilter('Shirts',this)">Shirts</button>
+    <button class="adm-filter" data-cat="Bottoms" onclick="setFilter('Bottoms',this)">Bottoms</button>
+    <button class="adm-filter" data-cat="Co-ords" onclick="setFilter('Co-ords',this)">Co-ords</button>
+    <button class="adm-filter" data-cat="Accessories" onclick="setFilter('Accessories',this)">Accessories</button>
+    <button class="adm-filter" data-cat="New In" onclick="setFilter('New In',this)">New In</button>
+    <button class="adm-filter" data-cat="Sale" onclick="setFilter('Sale',this)">Sale</button>
+    <button class="adm-filter" data-cat="Clearance" onclick="setFilter('Clearance',this)">Clearance</button>
+    <input class="adm-search" type="text" id="search-input" placeholder="search products…" oninput="renderTable()">
+  </div>
+
+  <!-- Table -->
+  <div class="adm-table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Sale</th>
+          <th>Sizes</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="prod-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Drawer overlay -->
+<div class="adm-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+<!-- Add/Edit drawer -->
+<div class="adm-drawer" id="drawer">
+  <div class="adm-drawer__head">
+    <div class="adm-drawer__title" id="drawer-title">Add Product</div>
+    <button class="adm-drawer__close" onclick="closeDrawer()">×</button>
+  </div>
+  <div class="adm-drawer__body">
+
+    <!-- Image preview + upload -->
+    <div class="adm-field">
+      <label class="adm-label">Product Image</label>
+      <img id="form-img-preview" class="adm-img-preview" src="" alt="" style="display:none">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+        <label class="adm-file-label">
+          Upload file
+          <input type="file" id="form-img-file" accept="image/*" onchange="previewFile(this)">
+        </label>
+        <span style="font-size:11px;color:var(--hawt-ash);">or</span>
+        <input class="adm-input" type="url" id="form-img-url" placeholder="paste image URL…" style="flex:1;min-width:180px;" oninput="previewUrl(this.value)">
+      </div>
+    </div>
+
+    <div class="adm-row2">
+      <div class="adm-field">
+        <label class="adm-label">Name *</label>
+        <input class="adm-input" type="text" id="form-name" required>
+      </div>
+      <div class="adm-field">
+        <label class="adm-label">Category *</label>
+        <select class="adm-select" id="form-category">
+          <option>Dresses</option><option>Shirts</option><option>Bottoms</option>
+          <option>Co-ords</option><option>Accessories</option><option>New In</option>
+          <option>Sale</option><option>Clearance</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="adm-field">
+      <label class="adm-label">Base Price (₹) *</label>
+      <input class="adm-input" type="number" id="form-base-price" min="0" step="1" oninput="updateDiscPreview()">
+    </div>
+
+    <!-- Pricing flags -->
+    <div class="adm-field">
+      <label class="adm-label">Mark As</label>
+      <div class="adm-toggles">
+        <button type="button" class="adm-toggle-btn" id="toggle-new-in" onclick="toggleFlag('new-in')">
+          <span class="toggle-dot"></span>New In
+        </button>
+        <button type="button" class="adm-toggle-btn" id="toggle-on-sale" onclick="toggleFlag('on-sale')">
+          <span class="toggle-dot"></span>Sale
+        </button>
+        <button type="button" class="adm-toggle-btn" id="toggle-clearance" onclick="toggleFlag('clearance')">
+          <span class="toggle-dot"></span>Clearance
+        </button>
+      </div>
+    </div>
+
+    <div class="adm-discount-row" id="discount-row">
+      <label class="adm-label">Discount % <span style="color:var(--hawt-ink)">(1–99)</span></label>
+      <input class="adm-input" type="number" id="form-discount" min="1" max="99" step="1" placeholder="e.g. 20" oninput="updateDiscPreview()">
+      <div class="adm-disc-hint" id="disc-hint"></div>
+    </div>
+
+    <div class="adm-field">
+      <label class="adm-label">Sub-title</label>
+      <input class="adm-input" type="text" id="form-sub" placeholder="e.g. sand · linen blend">
+    </div>
+
+    <div class="adm-field">
+      <label class="adm-label">Description</label>
+      <textarea class="adm-textarea" id="form-description"></textarea>
+    </div>
+
+    <!-- Sizes -->
+    <div class="adm-field">
+      <label class="adm-label">Sizes & Stock</label>
+      <table class="adm-sizes">
+        <thead><tr><th>Size</th><th>Stock Qty</th><th></th></tr></thead>
+        <tbody id="sizes-tbody"></tbody>
+      </table>
+      <button class="adm-add-size" type="button" onclick="addSizeRow()">+ add size</button>
+    </div>
+
+    <!-- Active toggle (edit mode only) -->
+    <div class="adm-field" id="active-field" style="display:none;">
+      <label class="adm-label">Visibility</label>
+      <select class="adm-select" id="form-active">
+        <option value="true">Active (visible on site)</option>
+        <option value="false">Inactive (hidden from site)</option>
+      </select>
+    </div>
+
+  </div>
+  <div class="adm-drawer__foot">
+    <button class="adm-btn" id="drawer-save-btn" onclick="saveProduct()">Save</button>
+    <button class="adm-btn adm-btn--ghost" onclick="closeDrawer()">Cancel</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="adm-toast" id="toast"></div>
+
+<script>
+  // ── State ──────────────────────────────────────────────────────────────
+  let products = [];
+  let activeFilter = 'all';
+  let editingId = null;
+  let pendingImageFile = null;
+
+  // ── Guard ──────────────────────────────────────────────────────────────
+  const token = localStorage.getItem('hawt_token');
+  const user  = (() => { try { return JSON.parse(localStorage.getItem('hawt_user')); } catch { return null; } })();
+  if (!token || !user?.is_admin) {
+    window.location.href = './auth.html?redirect=admin.html';
+  } else {
+    document.getElementById('bar-user').textContent = user.name;
+  }
+
+  // ── API helpers ────────────────────────────────────────────────────────
+  async function apiFetch(method, path, body) {
+    const opts = { method, headers: { 'Authorization': 'Bearer ' + token } };
+    if (body && !(body instanceof FormData)) {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(body);
+    } else if (body instanceof FormData) {
+      opts.body = body;
+    }
+    const res = await fetch('/api' + path, opts);
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) throw new Error(data.error || 'request failed');
+    return data;
+  }
+
+  // ── Load products ──────────────────────────────────────────────────────
+  async function loadProducts() {
+    try {
+      products = await apiFetch('GET', '/admin/products');
+      updateStats();
+      renderTable();
+    } catch (e) {
+      showToast(e.message, true);
+    }
+  }
+
+  function updateStats() {
+    const active   = products.filter(p => p.is_active).length;
+    const inactive = products.length - active;
+    const cats     = new Set(products.map(p => p.category)).size;
+    document.getElementById('stat-total').textContent   = products.length;
+    document.getElementById('stat-active').textContent  = active;
+    document.getElementById('stat-inactive').textContent = inactive;
+    document.getElementById('stat-cats').textContent    = cats;
+    document.getElementById('prod-count').textContent   = products.length + ' products';
+  }
+
+  // ── Filter & render ────────────────────────────────────────────────────
+  function setFilter(cat, btn) {
+    activeFilter = cat;
+    document.querySelectorAll('.adm-filter').forEach(b => b.classList.remove('is-sel'));
+    btn.classList.add('is-sel');
+    renderTable();
+  }
+
+  function renderTable() {
+    const q = (document.getElementById('search-input').value || '').toLowerCase();
+    let list = products;
+    if (activeFilter === 'active')   list = list.filter(p => p.is_active);
+    else if (activeFilter === 'inactive') list = list.filter(p => !p.is_active);
+    else if (activeFilter !== 'all') list = list.filter(p => p.category === activeFilter);
+    if (q) list = list.filter(p => p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q));
+
+    const tbody = document.getElementById('prod-tbody');
+    if (!list.length) {
+      tbody.innerHTML = '<tr><td colspan="8" class="adm-empty">no products found</td></tr>';
+      return;
+    }
+    tbody.innerHTML = list.map(p => {
+      const sizes = (p.variants || []).map(v => v.size).join(', ') || '—';
+      const price = '₹' + Number(p.base_price).toLocaleString('en-IN');
+      const sale  = p.sale_price ? '₹' + Number(p.sale_price).toLocaleString('en-IN') : '—';
+      const badge = p.is_active
+        ? '<span class="adm-badge adm-badge--active">active</span>'
+        : '<span class="adm-badge adm-badge--inactive">inactive</span>';
+      return `<tr>
+        <td>
+          <div class="adm-thumb-wrap" onclick="quickUpload('${p.id}',this)" style="cursor:pointer;" title="click to change image">
+            <img class="adm-thumb" src="${p.image_url || ''}" alt="${p.name}" onerror="this.style.opacity=0.2">
+            <div class="adm-thumb-upload">📷</div>
+          </div>
+          <input type="file" accept="image/*" style="display:none" onchange="uploadThumbFile(event,'${p.id}',this)">
+        </td>
+        <td style="max-width:200px;">
+          <strong>${p.name}</strong>
+          ${p.is_new_in ? '<span class="adm-flag adm-flag--new">new</span>' : ''}
+          ${p.is_on_sale ? '<span class="adm-flag adm-flag--sale">sale</span>' : ''}
+          ${p.is_clearance ? '<span class="adm-flag adm-flag--clear">clr</span>' : ''}
+          <br><span style="font-size:11px;color:var(--hawt-ash);">${p.sub || ''}</span>
+        </td>
+        <td>${p.category}</td>
+        <td>${price}</td>
+        <td>${p.discount_percentage > 0 ? p.discount_percentage + '% off → ' + sale : sale}</td>
+        <td style="font-size:11px;color:var(--hawt-ash);">${sizes}</td>
+        <td>${badge}</td>
+        <td>
+          <div class="adm-actions">
+            <button class="adm-icon-btn" onclick="openDrawer('${p.id}')" title="Edit">✏️</button>
+            <button class="adm-icon-btn adm-icon-btn--danger" onclick="deleteProduct('${p.id}','${p.name.replace(/'/g,'')}')" title="Deactivate">🗑</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  // ── Quick image upload from table row ──────────────────────────────────
+  function quickUpload(productId, thumbWrap) {
+    const input = thumbWrap.nextElementSibling;
+    input.onchange = (e) => uploadThumbFile(e, productId, thumbWrap.querySelector('.adm-thumb'));
+    input.click();
+  }
+  async function uploadThumbFile(event, productId, imgEl) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const fd = new FormData();
+    fd.append('image', file);
+    try {
+      const res = await apiFetch('POST', '/admin/products/' + productId + '/image', fd);
+      // Update in-memory product
+      const p = products.find(x => x.id === productId);
+      if (p) p.image_url = res.image_url;
+      // Update img element directly
+      const img = typeof imgEl === 'HTMLImageElement' ? imgEl : document.querySelector(`.adm-thumb-wrap[onclick*="${productId}"] .adm-thumb`);
+      if (img) { img.src = res.image_url + '?t=' + Date.now(); img.style.opacity = 1; }
+      showToast('image updated ✓');
+    } catch (e) {
+      showToast(e.message, true);
+    }
+  }
+
+  // ── Drawer ─────────────────────────────────────────────────────────────
+  function openDrawer(productId) {
+    editingId = productId;
+    pendingImageFile = null;
+    document.getElementById('form-img-file').value = '';
+    const p = productId ? products.find(x => x.id === productId) : null;
+    document.getElementById('drawer-title').textContent = p ? 'Edit Product' : 'Add Product';
+    document.getElementById('active-field').style.display = p ? 'block' : 'none';
+    document.getElementById('form-name').value        = p?.name || '';
+    document.getElementById('form-category').value    = p?.category || 'Dresses';
+    document.getElementById('form-base-price').value  = p?.base_price || '';
+    document.getElementById('form-discount').value    = p?.discount_percentage > 0 ? p.discount_percentage : '';
+    document.getElementById('form-sub').value         = p?.sub || '';
+    // Flags
+    setToggle('new-in',    !!p?.is_new_in);
+    setToggle('on-sale',   !!p?.is_on_sale);
+    setToggle('clearance', !!p?.is_clearance);
+    updateDiscPreview();
+    document.getElementById('form-description').value = p?.description || '';
+    document.getElementById('form-img-url').value     = p?.image_url || '';
+    document.getElementById('form-active').value      = p ? String(p.is_active) : 'true';
+    const preview = document.getElementById('form-img-preview');
+    if (p?.image_url) { preview.src = p.image_url; preview.style.display = 'block'; }
+    else { preview.style.display = 'none'; preview.src = ''; }
+    // Sizes
+    const tbody = document.getElementById('sizes-tbody');
+    const variants = p?.variants || [];
+    tbody.innerHTML = variants.length
+      ? variants.map((v,i) => sizeRowHTML(i, v.size, v.stock_qty)).join('')
+      : sizeRowHTML(0, '', 0);
+    document.getElementById('drawer-overlay').classList.add('is-open');
+    document.getElementById('drawer').classList.add('is-open');
+  }
+
+  function closeDrawer() {
+    document.getElementById('drawer-overlay').classList.remove('is-open');
+    document.getElementById('drawer').classList.remove('is-open');
+    editingId = null;
+    pendingImageFile = null;
+  }
+
+  function sizeRowHTML(i, size, stock) {
+    return `<tr>
+      <td><input class="adm-sizes-size" type="text" value="${size}" placeholder="S, M, L…"></td>
+      <td><input class="adm-sizes-stock" type="number" value="${stock}" min="0" placeholder="0"></td>
+      <td><button type="button" onclick="this.closest('tr').remove()" style="border:none;background:transparent;cursor:pointer;color:#c0392b;font-size:16px;padding:0 4px;">×</button></td>
+    </tr>`;
+  }
+
+  function addSizeRow() {
+    const tbody = document.getElementById('sizes-tbody');
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="adm-sizes-size" type="text" placeholder="S, M, L…"></td>
+      <td><input class="adm-sizes-stock" type="number" value="0" min="0"></td>
+      <td><button type="button" onclick="this.closest('tr').remove()" style="border:none;background:transparent;cursor:pointer;color:#c0392b;font-size:16px;padding:0 4px;">×</button></td>`;
+    tbody.appendChild(tr);
+  }
+
+  function previewFile(input) {
+    const file = input.files[0];
+    if (!file) return;
+    pendingImageFile = file;
+    const reader = new FileReader();
+    reader.onload = e => {
+      const preview = document.getElementById('form-img-preview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function previewUrl(url) {
+    const preview = document.getElementById('form-img-preview');
+    if (url) { preview.src = url; preview.style.display = 'block'; }
+    else { preview.style.display = 'none'; }
+    pendingImageFile = null;
+    document.getElementById('form-img-file').value = '';
+  }
+
+  // ── Save (create or update) ────────────────────────────────────────────
+  async function saveProduct() {
+    const btn = document.getElementById('drawer-save-btn');
+    btn.disabled = true; btn.textContent = 'saving…';
+
+    const sizes = [...document.querySelectorAll('#sizes-tbody tr')].map(tr => ({
+      size:      tr.querySelector('.adm-sizes-size').value.trim(),
+      stock_qty: parseInt(tr.querySelector('.adm-sizes-stock').value) || 0,
+    })).filter(s => s.size);
+
+    const body = {
+      name:        document.getElementById('form-name').value.trim(),
+      category:    document.getElementById('form-category').value,
+      base_price:  document.getElementById('form-base-price').value,
+      is_new_in:            document.getElementById('toggle-new-in').classList.contains('is-on'),
+      is_on_sale:           document.getElementById('toggle-on-sale').classList.contains('is-on'),
+      is_clearance:         document.getElementById('toggle-clearance').classList.contains('is-on'),
+      discount_percentage:  parseInt(document.getElementById('form-discount').value) || 0,
+      badge:       autobadge(),
+      sub:         document.getElementById('form-sub').value.trim(),
+      description: document.getElementById('form-description').value.trim(),
+      image_url:   document.getElementById('form-img-url').value.trim(),
+      is_active:   document.getElementById('form-active').value === 'true',
+      sizes,
+    };
+
+    if (!body.name || !body.base_price) {
+      showToast('name and base price are required', true);
+      btn.disabled = false; btn.textContent = 'Save';
+      return;
+    }
+
+    try {
+      let saved;
+      if (editingId) {
+        saved = await apiFetch('PUT', '/admin/products/' + editingId, body);
+      } else {
+        saved = await apiFetch('POST', '/admin/products', body);
+        editingId = saved.id;
+      }
+
+      // Upload image file if one was selected
+      if (pendingImageFile) {
+        const fd = new FormData();
+        fd.append('image', pendingImageFile);
+        const imgRes = await apiFetch('POST', '/admin/products/' + editingId + '/image', fd);
+        saved.image_url = imgRes.image_url;
+      }
+
+      await loadProducts();
+      closeDrawer();
+      showToast(editingId ? 'product updated ✓' : 'product created ✓');
+    } catch (e) {
+      showToast(e.message, true);
+    } finally {
+      btn.disabled = false; btn.textContent = 'Save';
+    }
+  }
+
+  // ── Delete (soft) ──────────────────────────────────────────────────────
+  async function deleteProduct(id, name) {
+    if (!confirm('Deactivate "' + name + '"? It will be hidden from the shop but not permanently deleted.')) return;
+    try {
+      await apiFetch('DELETE', '/admin/products/' + id);
+      await loadProducts();
+      showToast('product deactivated');
+    } catch (e) {
+      showToast(e.message, true);
+    }
+  }
+
+  // ── Toast ──────────────────────────────────────────────────────────────
+  let _toastTimer;
+  function showToast(msg, isErr) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = 'adm-toast is-show' + (isErr ? ' adm-toast--err' : '');
+    clearTimeout(_toastTimer);
+    _toastTimer = setTimeout(() => el.classList.remove('is-show'), 3000);
+  }
+
+  // ── Toggle flag helpers ────────────────────────────────────────────────
+  function setToggle(flag, on) {
+    const btn = document.getElementById('toggle-' + flag);
+    if (on) btn.classList.add('is-on'); else btn.classList.remove('is-on');
+    syncDiscountRow();
+  }
+  function toggleFlag(flag) {
+    const btn = document.getElementById('toggle-' + flag);
+    btn.classList.toggle('is-on');
+    // Only one of sale/clearance can apply
+    if (flag === 'on-sale' && btn.classList.contains('is-on')) {
+      document.getElementById('toggle-clearance').classList.remove('is-on');
+    }
+    if (flag === 'clearance' && btn.classList.contains('is-on')) {
+      document.getElementById('toggle-on-sale').classList.remove('is-on');
+    }
+    syncDiscountRow();
+  }
+  function syncDiscountRow() {
+    const saleOn = document.getElementById('toggle-on-sale').classList.contains('is-on');
+    const clearOn = document.getElementById('toggle-clearance').classList.contains('is-on');
+    const row = document.getElementById('discount-row');
+    if (saleOn || clearOn) row.classList.add('is-vis'); else row.classList.remove('is-vis');
+    updateDiscPreview();
+  }
+  function updateDiscPreview() {
+    const base = parseFloat(document.getElementById('form-base-price').value) || 0;
+    const pct  = parseInt(document.getElementById('form-discount').value) || 0;
+    const hint = document.getElementById('disc-hint');
+    if (base > 0 && pct > 0) {
+      const sale = (base * (1 - pct / 100)).toFixed(0);
+      hint.textContent = '₹' + Number(base).toLocaleString('en-IN') + ' → ₹' + Number(sale).toLocaleString('en-IN') + ' (save ' + pct + '%)';
+    } else {
+      hint.textContent = '';
+    }
+  }
+  function autobadge() {
+    if (document.getElementById('toggle-new-in').classList.contains('is-on')) return 'New In';
+    if (document.getElementById('toggle-on-sale').classList.contains('is-on')) return 'Sale';
+    if (document.getElementById('toggle-clearance').classList.contains('is-on')) return 'Clearance';
+    return null;
+  }
+
+  // ── Nav helpers ────────────────────────────────────────────────────────
+  function goToSite() { window.open('./index.html', '_blank'); }
+  function signOut() {
+    localStorage.removeItem('hawt_token');
+    localStorage.removeItem('hawt_user');
+    window.location.href = './auth.html?redirect=admin.html';
+  }
+
+  loadProducts();
+</script>
+</body>
+</html>

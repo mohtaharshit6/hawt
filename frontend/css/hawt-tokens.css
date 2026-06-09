@@ -1,0 +1,371 @@
+/* ============================================================
+   HAWT — Design tokens
+   Load this on every artifact in the system.
+   ============================================================ */
+
+/* --- Webfonts (CDN — flag: Satoshi substituted with Inter) --- */
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* ---------- COLOR (5 tokens, used at full strength) ---------- */
+  --hawt-ink:   #0A0A0A;   /* primary dark surface */
+  --hawt-bone:  #F4F1EC;   /* primary warm-white surface */
+  --hawt-pure:  #FFFFFF;   /* product photography bg, modal sheets */
+  --hawt-ash:   #7A7873;   /* meta text, dividers, disabled */
+  --hawt-sand:  #C9B79C;   /* the only accent — used at MAX 2× per screen */
+
+  /* hairline divider (1px @ 30% ash, computed) */
+  --hawt-hairline: rgba(122, 120, 115, 0.30);
+
+  /* translucent surfaces (sticky header only) */
+  --hawt-bone-blur: rgba(244, 241, 236, 0.72);
+  --hawt-ink-blur:  rgba(10, 10, 10, 0.72);
+
+  /* semantic — foreground / background pairs */
+  --hawt-fg:        var(--hawt-ink);
+  --hawt-fg-muted: var(--hawt-ash);
+  --hawt-bg:        var(--hawt-bone);
+  --hawt-bg-alt:    var(--hawt-ink);
+
+  /* ---------- TYPE FAMILIES ---------- */
+  --hawt-font-display: "Bebas Neue", "Oswald", "Impact", sans-serif;
+  --hawt-font-body:    "Inter", "Satoshi", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --hawt-font-mono:    "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* ---------- TYPE SIZES — polar scale (huge OR small) ---------- */
+  /* Display — Bebas, ALL CAPS only */
+  --hawt-display-mega: clamp(96px, 18vw, 280px);   /* hero shouts */
+  --hawt-display-xl:   clamp(72px, 10vw, 160px);   /* section openers */
+  --hawt-display-lg:   clamp(48px, 6vw, 96px);     /* big headers */
+  --hawt-display-md:   clamp(32px, 4vw, 56px);     /* sub-heads, product names on hero tiles */
+  --hawt-display-sm:   24px;                       /* product tile title */
+
+  /* Body — Inter */
+  --hawt-body-lg:    18px;
+  --hawt-body:       15px;
+  --hawt-body-sm:    13px;
+  --hawt-meta:       12px;                          /* meta / labels */
+
+  /* ---------- TYPE TRACKING ---------- */
+  --hawt-track-display-tight: -0.01em;             /* mega + xl Bebas */
+  --hawt-track-display-loose:  0.04em;             /* md/sm Bebas */
+  --hawt-track-label-wide:     0.16em;             /* tiny ALL CAPS labels */
+
+  /* ---------- WEIGHTS ---------- */
+  --hawt-w-regular: 400;
+  --hawt-w-medium:  500;
+  --hawt-w-semi:    600;
+  --hawt-w-bold:    700;
+
+  /* ---------- LINE HEIGHT ---------- */
+  --hawt-lh-display: 0.92;
+  --hawt-lh-tight:   1.15;
+  --hawt-lh-body:    1.55;
+
+  /* ---------- SPACING — 8pt scale ---------- */
+  --hawt-s-1:  4px;
+  --hawt-s-2:  8px;
+  --hawt-s-3:  12px;
+  --hawt-s-4:  16px;
+  --hawt-s-5:  24px;
+  --hawt-s-6:  32px;
+  --hawt-s-7:  48px;
+  --hawt-s-8:  64px;
+  --hawt-s-9:  96px;
+  --hawt-s-10: 128px;
+  --hawt-s-11: 160px;
+
+  /* section padding (vertical) — fluid */
+  --hawt-section-y: clamp(64px, 8vw, 160px);
+  --hawt-page-x:    clamp(24px, 5vw, 80px);
+
+  /* ---------- LAYOUT ---------- */
+  --hawt-max-w: 1680px;
+  --hawt-grid-gutter: 32px;
+  --hawt-grid-gutter-sm: 16px;
+
+  /* ---------- CORNERS ---------- */
+  --hawt-r-0:   0px;          /* the default */
+  --hawt-r-sm:  4px;          /* size chips, filter pills */
+  --hawt-r-pill: 999px;       /* primary CTA + newsletter input — the ONLY soft shapes */
+
+  /* ---------- ELEVATION — the system is shadowless ----------
+     Exception: side cart drawer only. */
+  --hawt-shadow-drawer: 0 0 80px rgba(0, 0, 0, 0.18);
+
+  /* ---------- MOTION ---------- */
+  --hawt-ease:        cubic-bezier(0.22, 1, 0.36, 1);  /* the house curve */
+  --hawt-dur-press:   120ms;
+  --hawt-dur-fast:    220ms;
+  --hawt-dur-base:    320ms;
+  --hawt-dur-slow:    480ms;
+  --hawt-dur-image:   720ms;
+
+  /* ---------- Z ---------- */
+  --hawt-z-announce: 50;
+  --hawt-z-header:   60;
+  --hawt-z-drawer:   80;
+  --hawt-z-modal:    90;
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT STYLES
+   Apply these classes (or the .hawt-* prefix on real tags) so
+   anything that loads this stylesheet inherits the brand voice.
+   ============================================================ */
+
+.hawt-body, body.hawt {
+  background: var(--hawt-bg);
+  color: var(--hawt-fg);
+  font-family: var(--hawt-font-body);
+  font-size: var(--hawt-body);
+  line-height: var(--hawt-lh-body);
+  font-weight: var(--hawt-w-regular);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* ----- Display ----- */
+.hawt-h1, .hawt-display-mega {
+  font-family: var(--hawt-font-display);
+  font-size: var(--hawt-display-mega);
+  line-height: var(--hawt-lh-display);
+  letter-spacing: var(--hawt-track-display-tight);
+  text-transform: uppercase;
+  font-weight: var(--hawt-w-regular);
+  margin: 0;
+}
+.hawt-h2, .hawt-display-xl {
+  font-family: var(--hawt-font-display);
+  font-size: var(--hawt-display-xl);
+  line-height: var(--hawt-lh-display);
+  letter-spacing: var(--hawt-track-display-tight);
+  text-transform: uppercase;
+  font-weight: var(--hawt-w-regular);
+  margin: 0;
+}
+.hawt-h3, .hawt-display-lg {
+  font-family: var(--hawt-font-display);
+  font-size: var(--hawt-display-lg);
+  line-height: var(--hawt-lh-display);
+  letter-spacing: var(--hawt-track-display-tight);
+  text-transform: uppercase;
+  font-weight: var(--hawt-w-regular);
+  margin: 0;
+}
+.hawt-h4, .hawt-display-md {
+  font-family: var(--hawt-font-display);
+  font-size: var(--hawt-display-md);
+  line-height: var(--hawt-lh-tight);
+  letter-spacing: var(--hawt-track-display-loose);
+  text-transform: uppercase;
+  font-weight: var(--hawt-w-regular);
+  margin: 0;
+}
+.hawt-h5, .hawt-display-sm {
+  font-family: var(--hawt-font-display);
+  font-size: var(--hawt-display-sm);
+  line-height: var(--hawt-lh-tight);
+  letter-spacing: var(--hawt-track-display-loose);
+  text-transform: uppercase;
+  font-weight: var(--hawt-w-regular);
+  margin: 0;
+}
+
+/* ----- Body ----- */
+.hawt-p, .hawt-body-default {
+  font-family: var(--hawt-font-body);
+  font-size: var(--hawt-body);
+  line-height: var(--hawt-lh-body);
+  color: var(--hawt-fg);
+  margin: 0;
+}
+.hawt-body-lg {
+  font-size: var(--hawt-body-lg);
+  line-height: 1.5;
+}
+.hawt-body-sm {
+  font-size: var(--hawt-body-sm);
+  line-height: 1.5;
+}
+.hawt-meta {
+  font-size: var(--hawt-meta);
+  color: var(--hawt-fg-muted);
+  letter-spacing: var(--hawt-track-label-wide);
+  text-transform: uppercase;
+  font-weight: var(--hawt-w-medium);
+}
+.hawt-mono {
+  font-family: var(--hawt-font-mono);
+  font-size: var(--hawt-body-sm);
+  letter-spacing: 0;
+}
+
+/* ----- Links ----- */
+.hawt-link {
+  color: var(--hawt-fg);
+  text-decoration: none;
+  position: relative;
+  transition: color var(--hawt-dur-fast) var(--hawt-ease);
+}
+.hawt-link::after {
+  content: "";
+  position: absolute;
+  left: 0; right: auto; bottom: -2px;
+  height: 1px;
+  width: 0;
+  background: currentColor;
+  transition: width var(--hawt-dur-base) var(--hawt-ease);
+}
+.hawt-link:hover::after { width: 100%; }
+
+/* ----- Buttons ----- */
+.hawt-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--hawt-s-2);
+  font-family: var(--hawt-font-body);
+  font-size: var(--hawt-body-sm);
+  font-weight: var(--hawt-w-medium);
+  letter-spacing: var(--hawt-track-label-wide);
+  text-transform: lowercase;
+  padding: 18px 36px;
+  border: 1px solid transparent;
+  border-radius: var(--hawt-r-pill);
+  cursor: pointer;
+  transition:
+    background var(--hawt-dur-base) var(--hawt-ease),
+    color var(--hawt-dur-base) var(--hawt-ease),
+    transform var(--hawt-dur-press) var(--hawt-ease);
+  white-space: nowrap;
+}
+.hawt-btn--primary {
+  background: var(--hawt-ink);
+  color: var(--hawt-bone);
+}
+.hawt-btn--primary:hover {
+  background: var(--hawt-sand);
+  color: var(--hawt-ink);
+}
+.hawt-btn--secondary {
+  background: transparent;
+  color: var(--hawt-ink);
+  border-color: var(--hawt-ink);
+}
+.hawt-btn--secondary:hover {
+  background: var(--hawt-ink);
+  color: var(--hawt-bone);
+}
+.hawt-btn--ghost {
+  background: transparent;
+  color: var(--hawt-ink);
+  padding: 10px 0;
+  border-radius: 0;
+}
+.hawt-btn:active { transform: scale(0.98); }
+
+/* on dark sections */
+.hawt-on-ink .hawt-btn--primary {
+  background: var(--hawt-bone);
+  color: var(--hawt-ink);
+}
+.hawt-on-ink .hawt-btn--primary:hover {
+  background: var(--hawt-sand);
+  color: var(--hawt-ink);
+}
+
+/* ----- Inputs ----- */
+.hawt-input {
+  font-family: var(--hawt-font-body);
+  font-size: var(--hawt-body);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--hawt-hairline);
+  color: var(--hawt-fg);
+  padding: 12px 0;
+  width: 100%;
+  outline: none;
+  transition: border-color var(--hawt-dur-fast) var(--hawt-ease);
+}
+.hawt-input::placeholder { color: var(--hawt-fg-muted); }
+.hawt-input:focus { border-color: var(--hawt-fg); }
+
+/* Newsletter pill input variant */
+.hawt-input--pill {
+  border: 1px solid var(--hawt-hairline);
+  border-radius: var(--hawt-r-pill);
+  padding: 16px 24px;
+}
+
+/* ----- Cards (product tile) ----- */
+.hawt-tile {
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+.hawt-tile__image {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  background: var(--hawt-pure);
+  overflow: hidden;
+  position: relative;
+}
+.hawt-tile__image > img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform var(--hawt-dur-image) var(--hawt-ease);
+}
+.hawt-tile:hover .hawt-tile__image > img { transform: scale(1.03); }
+.hawt-tile__meta {
+  margin-top: var(--hawt-s-4);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--hawt-s-3);
+}
+.hawt-tile__name {
+  font-family: var(--hawt-font-display);
+  font-size: var(--hawt-display-sm);
+  letter-spacing: var(--hawt-track-display-loose);
+  text-transform: uppercase;
+}
+.hawt-tile__price {
+  font-family: var(--hawt-font-mono);
+  font-size: var(--hawt-body-sm);
+}
+
+/* ----- Section helpers ----- */
+.hawt-section {
+  padding: var(--hawt-section-y) var(--hawt-page-x);
+}
+.hawt-section--ink {
+  background: var(--hawt-ink);
+  color: var(--hawt-bone);
+}
+.hawt-section--bone {
+  background: var(--hawt-bone);
+  color: var(--hawt-ink);
+}
+
+/* ----- Reveal-on-scroll utility (apply with IntersectionObserver) ----- */
+.hawt-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity var(--hawt-dur-image) var(--hawt-ease),
+    transform var(--hawt-dur-image) var(--hawt-ease);
+}
+.hawt-reveal.is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* ----- Hairline divider ----- */
+.hawt-hr {
+  border: 0;
+  border-top: 1px solid var(--hawt-hairline);
+  margin: 0;
+}

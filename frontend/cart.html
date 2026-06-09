@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Bag — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .cart-page { max-width: 960px; margin: 0 auto; padding: 60px var(--hawt-page-x) 120px; }
+    .cart-page__head { margin-bottom: 48px; }
+    .cart-page__title { font-family: var(--hawt-font-display); font-size: clamp(48px, 7vw, 96px); text-transform: uppercase; line-height: 0.9; letter-spacing: -0.01em; margin: 12px 0 0; font-weight: 400; }
+    .cart-page__layout { display: grid; grid-template-columns: 1fr 360px; gap: 64px; align-items: start; }
+    @media (max-width: 760px) { .cart-page__layout { grid-template-columns: 1fr; } }
+    .cart-items { display: flex; flex-direction: column; }
+    .cart-row { display: grid; grid-template-columns: 100px 1fr auto; gap: 20px; padding: 28px 0; border-bottom: 1px solid var(--hawt-hairline); align-items: start; }
+    .cart-row__img { width: 100px; height: 130px; overflow: hidden; background: var(--hawt-pure); flex-shrink: 0; }
+    .cart-row__img img { width: 100%; height: 100%; object-fit: cover; }
+    .cart-row__name { font-family: var(--hawt-font-display); font-size: 22px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .cart-row__sub { font-size: 12px; color: var(--hawt-ash); margin-top: 4px; }
+    .cart-row__price { font-family: var(--hawt-font-mono); font-size: 14px; white-space: nowrap; padding-top: 4px; }
+    .cart-qty { display: inline-flex; align-items: center; gap: 14px; margin-top: 14px; border: 1px solid var(--hawt-hairline); padding: 6px 10px; font-family: var(--hawt-font-mono); font-size: 13px; }
+    .cart-qty button { background: transparent; border: 0; cursor: pointer; padding: 2px; display: inline-flex; color: var(--hawt-ink); }
+    .cart-remove { margin-top: 10px; display: block; background: transparent; border: 0; color: var(--hawt-ash); cursor: pointer; font-size: 11px; letter-spacing: 0.14em; text-transform: lowercase; padding: 0; text-decoration: underline; text-underline-offset: 3px; }
+    .cart-empty { padding: 80px 0; text-align: center; }
+    .cart-empty__title { font-family: var(--hawt-font-display); font-size: 56px; text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 16px; }
+    .cart-empty__sub { color: var(--hawt-ash); margin-bottom: 32px; }
+    .cart-summary { position: sticky; top: 140px; background: var(--hawt-bone); border: 1px solid var(--hawt-hairline); padding: 32px; }
+    .cart-summary__row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--hawt-hairline); }
+    .cart-summary__label { font-size: 13px; color: var(--hawt-ash); }
+    .cart-summary__value { font-family: var(--hawt-font-mono); font-size: 13px; }
+    .cart-summary__total { font-family: var(--hawt-font-display); font-size: 28px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .cart-summary__meta { font-size: 11px; color: var(--hawt-ash); margin: 12px 0 24px; }
+    .cart-checkout-btn { width: 100%; padding: 22px; }
+    #checkout-error { font-size:12px; color:#c0392b; margin-top:10px; display:none; text-align:center; }
+    /* Address form mobile */
+    @media (max-width: 640px) {
+      #cart-page-root [style*="grid-template-columns: 1fr 1fr"],
+      #cart-page-root [style*="grid-template-columns: 1fr 360px"],
+      #cart-page-root [style*="grid-template-columns: 1fr 1fr 120px"] {
+        grid-template-columns: 1fr !important;
+      }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="cart">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" aria-label="search"><span id="icon-search"></span></button>
+        <button class="hawt-header__bag" aria-label="bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account"><span id="icon-user"></span></a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <!-- SECONDARY NAV ROW -->
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <div class="cart-page">
+    <div class="cart-page__head">
+      <div class="hawt-meta">— your bag</div>
+      <h1 class="cart-page__title" id="cart-page-title">my bag</h1>
+    </div>
+    <div id="cart-page-root"></div>
+  </div>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script>
+    document.getElementById('icon-search').innerHTML = icon('search', 18);
+    document.getElementById('icon-bag').innerHTML    = icon('shopping-bag', 18);
+    document.getElementById('icon-user').innerHTML   = icon('user', 18);
+
+    // Minimal header scroll (no cart drawer on cart page)
+    window.addEventListener('scroll', () => {
+      const h = document.getElementById('main-header');
+      if (!h) return;
+      const s = window.scrollY > 32;
+      h.style.backdropFilter = s ? 'blur(20px)' : 'none';
+      h.style.background = s ? 'var(--hawt-bone-blur)' : 'transparent';
+    }, { passive: true });
+
+    if (typeof Auth !== 'undefined') Auth.updateHeaderState();
+    Cart.updateBadge();
+  </script>
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#lookbook">lookbook</a>
+        <a href="/support.html#store-locations">store locations</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="./shop.html">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">new in</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <script src="./js/cart-page.js"></script>
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">�</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
+  </div>
+</body>
+</html>

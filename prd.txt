@@ -1,0 +1,89 @@
+# PRD: Simple E-commerce Store
+
+## 1. Project Overview
+
+**Objective:** Build a functional, full-stack e-commerce web application that allows users to browse products, manage a shopping cart, and process basic orders.
+**Design Vibe:** Modern, minimalist, and responsive.
+
+## 2. Technology Stack
+
+* **Frontend:** HTML, Tailwind CSS, Vanilla JavaScript (Fetch API for backend communication)
+* **Backend:** Node.js with Express.js
+* **Database:** PostgreSQL (using `pg` or Sequelize/Prisma ORM)
+* **Authentication:** JWT (JSON Web Tokens) with bcrypt for password hashing
+
+## 3. Core Features & User Flow
+
+* **User Authentication:**
+* Registration page capturing Name, Email, and Password.
+* Login page that authenticates and stores a JWT in local storage or cookies.
+
+
+* **Product Discovery:**
+* A grid-layout home page displaying all available products (Image, Title, Price, "Add to Cart" button).
+* A dynamic product details page (`/product/:id`) showing expanded descriptions and stock status.
+
+
+* **Shopping Cart:**
+* A slide-out drawer or dedicated cart page.
+* Ability to add items, remove items, and adjust quantities.
+* Real-time subtotal calculation.
+
+
+* **Order Processing:**
+* A simple checkout button in the cart that converts the cart items into a finalized order in the database.
+* A basic "Order History" view for logged-in users.
+
+
+
+## 4. Database Schema (PostgreSQL)
+
+**Table: Users**
+
+* `id` (UUID, Primary Key)
+* `name` (VARCHAR)
+* `email` (VARCHAR, Unique)
+* `password_hash` (VARCHAR)
+* `created_at` (TIMESTAMP)
+
+**Table: Products**
+
+* `id` (UUID, Primary Key)
+* `name` (VARCHAR)
+* `description` (TEXT)
+* `price` (DECIMAL)
+* `stock` (INTEGER)
+* `image_url` (VARCHAR)
+
+**Table: Orders**
+
+* `id` (UUID, Primary Key)
+* `user_id` (UUID, Foreign Key -> Users)
+* `total_amount` (DECIMAL)
+* `status` (VARCHAR) - *e.g., 'pending', 'completed'*
+* `created_at` (TIMESTAMP)
+
+**Table: Order_Items**
+
+* `id` (UUID, Primary Key)
+* `order_id` (UUID, Foreign Key -> Orders)
+* `product_id` (UUID, Foreign Key -> Products)
+* `quantity` (INTEGER)
+* `price_at_purchase` (DECIMAL)
+
+## 5. API Architecture (Express.js)
+
+**Auth Routes:**
+
+* `POST /api/auth/register` - Creates a new user.
+* `POST /api/auth/login` - Authenticates user and returns JWT.
+
+**Product Routes:**
+
+* `GET /api/products` - Fetches all products.
+* `GET /api/products/:id` - Fetches a single product by ID.
+
+**Order Routes:**
+
+* `POST /api/orders` - Creates a new order (requires auth).
+* `GET /api/orders/me` - Fetches order history for the logged-in user (requires auth).

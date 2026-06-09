@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Support — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .info-hero {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      padding: 100px 48px 72px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .info-hero__eyebrow {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--hawt-sand);
+    }
+    .info-hero__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(64px, 10vw, 140px);
+      text-transform: uppercase; line-height: 0.9;
+      letter-spacing: var(--hawt-track-display-tight);
+    }
+    .info-hero__sub {
+      font-size: 15px; color: rgba(244,241,236,0.65);
+      max-width: 520px; line-height: 1.7; margin-top: 8px;
+    }
+    .info-nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--hawt-bone);
+      border-bottom: 1px solid var(--hawt-hairline);
+      display: flex; align-items: center; gap: 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .info-nav::-webkit-scrollbar { display: none; }
+    .info-nav a {
+      flex-shrink: 0;
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--hawt-ash); text-decoration: none;
+      padding: 14px 20px;
+      border-right: 1px solid var(--hawt-hairline);
+      transition: color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .info-nav a:hover { color: var(--hawt-ink); background: rgba(0,0,0,0.03); }
+    .info-section {
+      max-width: 860px; margin: 0 auto;
+      padding: 80px 48px;
+      border-bottom: 1px solid var(--hawt-hairline);
+    }
+    .info-section:last-of-type { border-bottom: none; }
+    .info-section__eyebrow {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--hawt-sand); margin-bottom: 20px;
+    }
+    .info-section__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(40px, 6vw, 80px);
+      text-transform: uppercase; line-height: 0.95;
+      margin-bottom: 32px;
+    }
+    .info-section__body { font-size: 15px; line-height: 1.8; color: var(--hawt-ink); }
+    .info-section__body p { margin-bottom: 18px; }
+    .info-section__body p:last-child { margin-bottom: 0; }
+    .info-section__body h3 {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--hawt-ink); margin: 32px 0 10px;
+    }
+    .info-section__body ul { padding-left: 20px; margin-bottom: 18px; }
+    .info-section__body ul li { margin-bottom: 8px; line-height: 1.7; }
+    .info-section__body strong { font-weight: 600; }
+    .info-section__body a { color: var(--hawt-ink); text-decoration: underline; }
+
+    /* FAQ accordion */
+    .faq-list { list-style: none; padding: 0; margin: 0; }
+    .faq-item {
+      border-bottom: 1px solid var(--hawt-hairline);
+    }
+    .faq-item:first-child { border-top: 1px solid var(--hawt-hairline); }
+    .faq-q {
+      width: 100%; text-align: left; background: none; border: none;
+      padding: 20px 0; cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--hawt-font-body); font-size: 15px; font-weight: 500;
+      color: var(--hawt-ink); line-height: 1.4;
+    }
+    .faq-q::after {
+      content: '+'; font-family: var(--hawt-font-mono); font-size: 18px;
+      flex-shrink: 0; margin-left: 20px; transition: transform .2s;
+    }
+    .faq-item.is-open .faq-q::after { transform: rotate(45deg); }
+    .faq-a {
+      max-height: 0; overflow: hidden; transition: max-height .3s ease;
+      font-size: 14px; line-height: 1.8; color: var(--hawt-ash);
+      padding: 0;
+    }
+    .faq-item.is-open .faq-a { max-height: 300px; padding-bottom: 20px; }
+
+    /* Size guide table */
+    .size-table { width: 100%; border-collapse: collapse; margin-top: 24px; font-size: 13px; }
+    .size-table th, .size-table td {
+      padding: 10px 14px; border: 1px solid var(--hawt-hairline); text-align: center;
+    }
+    .size-table th {
+      font-family: var(--hawt-font-mono); font-size: 9px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      background: var(--hawt-ink); color: var(--hawt-bone);
+    }
+    .size-table tr:nth-child(even) td { background: rgba(0,0,0,0.02); }
+    .size-caption {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--hawt-ash); margin-bottom: 10px;
+    }
+
+    /* Track order callout */
+    .track-cta {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      padding: 40px 40px; display: flex;
+      align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .track-cta__text { font-size: 15px; line-height: 1.6; max-width: 480px; }
+    .track-cta__text strong { font-family: var(--hawt-font-display); font-size: 28px; text-transform: uppercase; display: block; margin-bottom: 8px; }
+    .track-cta__btn {
+      display: inline-block;
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      background: var(--hawt-sand); color: var(--hawt-ink);
+      padding: 14px 28px; text-decoration: none;
+      flex-shrink: 0; transition: opacity .15s;
+    }
+    .track-cta__btn:hover { opacity: 0.85; }
+
+    /* Store locations */
+    .stores-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr);
+      gap: 1px; background: var(--hawt-hairline);
+      margin-top: 32px; border: 1px solid var(--hawt-hairline);
+    }
+    .store-card {
+      background: var(--hawt-bone); padding: 28px 24px;
+    }
+    .store-card__city {
+      font-family: var(--hawt-font-display); font-size: 28px;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .store-card__addr { font-size: 14px; line-height: 1.7; color: var(--hawt-ash); }
+    .store-card__hours { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 12px; color: var(--hawt-sand); }
+
+    /* B2B form */
+    .info-form { margin-top: 32px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .info-form__full { grid-column: 1 / -1; }
+    .info-form label { display: block; font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-ash); margin-bottom: 6px; }
+    .info-form input, .info-form select, .info-form textarea {
+      width: 100%; border: 1px solid var(--hawt-hairline);
+      background: #fff; padding: 11px 13px;
+      font-family: var(--hawt-font-body); font-size: 13px; outline: none;
+    }
+    .info-form input:focus, .info-form select:focus, .info-form textarea:focus { border-color: var(--hawt-ink); }
+    .info-form textarea { min-height: 100px; resize: vertical; }
+    .info-form__submit {
+      grid-column: 1 / -1;
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      border: none; padding: 14px 28px; cursor: pointer;
+      justify-self: start; transition: background .15s;
+    }
+    .info-form__submit:hover { background: #222; }
+
+    @media (max-width: 768px) {
+      .info-hero { padding: 72px 24px 48px; }
+      .info-section { padding: 56px 24px; }
+      .stores-grid { grid-template-columns: 1fr; }
+      .info-form { grid-template-columns: 1fr; }
+      .track-cta { padding: 32px 24px; }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="support">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" aria-label="search"><span id="icon-search"></span></button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist"><span id="icon-heart"></span></button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account"><span id="icon-user"></span></a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <div class="info-hero">
+    <div class="info-hero__eyebrow">— we're here when you need us</div>
+    <div class="info-hero__title">Support</div>
+    <p class="info-hero__sub">Real answers, fast. No bots, no ticket queues. Email us at <a href="mailto:support@hawt.in" style="color:var(--hawt-sand)">support@hawt.in</a> and we'll get back to you within 4 hours on business days.</p>
+  </div>
+
+  <!-- SECTION NAV -->
+  <nav class="info-nav" aria-label="page sections">
+    <a href="#track-order">Track Order</a>
+    <a href="#returns-exchanges">Returns &amp; Exchanges</a>
+    <a href="#faq">FAQ</a>
+    <a href="#size-guide">Size Guide</a>
+    <a href="#franchise-enquiry">Franchise</a>
+    <a href="#bulk-orders">Bulk Orders</a>
+    <a href="#store-locations">Store Locations</a>
+  </nav>
+
+  <!-- TRACK ORDER -->
+  <section id="track-order" class="info-section" style="padding-bottom: 0;">
+    <div class="info-section__eyebrow">— 01 / track order</div>
+    <h2 class="info-section__title">Track Your Order</h2>
+    <div class="info-section__body">
+      <p>Log in to your account to view real-time order status and tracking information. You'll also receive a tracking link by email once your order is dispatched.</p>
+    </div>
+  </section>
+  <div class="track-cta" style="max-width:860px; margin: 32px auto 80px;">
+    <div class="track-cta__text">
+      <strong>Check Your Orders</strong>
+      View dispatch status, tracking links, and full order history in one place.
+    </div>
+    <a href="./orders.html" class="track-cta__btn">Go to My Orders →</a>
+  </div>
+
+  <!-- RETURNS & EXCHANGES -->
+  <section id="returns-exchanges" class="info-section">
+    <div class="info-section__eyebrow">— 02 / returns &amp; exchanges</div>
+    <h2 class="info-section__title">Returns &amp; Exchanges</h2>
+    <div class="info-section__body">
+      <p>Changed your mind? Wrong size? No problem. Here's how it works.</p>
+      <h3>What's Eligible</h3>
+      <ul>
+        <li>Items returned within <strong>14 days</strong> of delivery.</li>
+        <li>Items that are unworn, unwashed, and unaltered with all original tags attached.</li>
+        <li>Items purchased at full price or during standard promotions.</li>
+      </ul>
+      <h3>What's Not Eligible</h3>
+      <ul>
+        <li>Clearance or flash-sale items (marked at checkout).</li>
+        <li>Accessories (earrings, bags) for hygiene reasons.</li>
+        <li>Items showing signs of wear, washing, or damage caused by the customer.</li>
+      </ul>
+      <h3>How to Initiate</h3>
+      <p>Email <a href="mailto:returns@hawt.in">returns@hawt.in</a> with your order number, item name, and reason. We'll reply within 24 hours with a prepaid return label (Kolkata pickup) or instructions for courier return (other cities). Do not return items without prior authorisation — unauthorised returns will not be processed.</p>
+      <h3>Exchange Process</h3>
+      <p>We can exchange for a different size subject to availability. If the size you want is not available, we'll issue a full refund or store credit instead. Exchange shipping is free on the first request per order.</p>
+      <h3>Refund Timeline</h3>
+      <p>Refunds are processed within 5–7 business days of us receiving and inspecting the returned item. Card/UPI refunds go back to the original payment method. COD refunds are processed via NEFT.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="info-section">
+    <div class="info-section__eyebrow">— 03 / frequently asked questions</div>
+    <h2 class="info-section__title">FAQ</h2>
+    <ul class="faq-list" style="margin-top: 16px;">
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I know my size?</button>
+        <div class="faq-a">Use the Size Guide section on this page. All measurements are in centimetres. When in doubt, size up — our fits are generally tailored, not oversized unless specified in the product description. If you're between sizes, email us with your measurements and we'll recommend.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">When does the next drop land?</button>
+        <div class="faq-a">We run four drops per year. The next one is Drop / 05, expected July 2026. Subscribe to our mailing list or follow us on Instagram for exact dates — we always announce 48 hours in advance. Drop pages go live at 12:00 PM IST.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Can I cancel my order after placing it?</button>
+        <div class="faq-a">Orders can be cancelled within 1 hour of placement by emailing support@hawt.in with your order number. After that, the order may have entered processing and cannot be cancelled — but you can initiate a return once it's delivered.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">My item arrived damaged. What do I do?</button>
+        <div class="faq-a">Email support@hawt.in within 48 hours of delivery with photos of the damage and your order number. We'll arrange a replacement or full refund with no return required. We take quality seriously — this shouldn't happen, and we'll fix it if it does.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Do you ship outside India?</button>
+        <div class="faq-a">Not yet. We currently ship to all serviceable pincodes within India. International shipping is on our roadmap for 2027. If you're outside India and want to place an order, email us — we sometimes make exceptions for large orders.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">How do I care for my HAWT! pieces?</button>
+        <div class="faq-a">Machine wash cold on a gentle cycle. Do not tumble dry — hang dry in shade. Iron on low heat with a pressing cloth. For linen and viscose pieces, dry cleaning is recommended for first wash. Do not bleach. Full care instructions are printed on every garment's label.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">Are the print designs exclusive to HAWT!?</button>
+        <div class="faq-a">Yes. All print artworks are original designs created exclusively for HAWT!. We own the IP on every pattern we've released. Reproducing them without permission is a copyright violation.</div>
+      </li>
+      <li class="faq-item">
+        <button class="faq-q" onclick="toggleFaq(this)">I can't log into my account. What do I do?</button>
+        <div class="faq-a">Use the "Forgot Password" option on the login page to get a reset link. If you're still having trouble, email support@hawt.in — we'll verify your identity and sort it manually within 2 hours.</div>
+      </li>
+    </ul>
+    <div style="margin-top: 40px; padding: 24px; background: rgba(0,0,0,0.03); border-left: 3px solid var(--hawt-sand);">
+      <p style="font-size:14px; margin:0;">Still have a question? Email us at <a href="mailto:support@hawt.in" style="color:var(--hawt-ink); font-weight:600;">support@hawt.in</a> — response time is under 4 hours on business days (Mon–Sat, 10AM–7PM IST).</p>
+    </div>
+  </section>
+
+  <!-- SIZE GUIDE -->
+  <section id="size-guide" class="info-section">
+    <div class="info-section__eyebrow">— 04 / size guide</div>
+    <h2 class="info-section__title">Size Guide</h2>
+    <div class="info-section__body">
+      <p>All measurements are in centimetres (cm). Measure yourself and compare to the chart below. For co-ords and sets, the size refers to the top — the bottom is cut to match proportionally.</p>
+
+      <p class="size-caption" style="margin-top:32px;">Women's Sizing</p>
+      <table class="size-table">
+        <thead>
+          <tr><th>Size</th><th>Chest</th><th>Waist</th><th>Hips</th><th>Shoulder</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>XS</td><td>80–83</td><td>62–65</td><td>86–89</td><td>36</td></tr>
+          <tr><td>S</td><td>84–87</td><td>66–69</td><td>90–93</td><td>37.5</td></tr>
+          <tr><td>M</td><td>88–92</td><td>70–74</td><td>94–98</td><td>39</td></tr>
+          <tr><td>L</td><td>93–97</td><td>75–79</td><td>99–103</td><td>40.5</td></tr>
+          <tr><td>XL</td><td>98–103</td><td>80–85</td><td>104–109</td><td>42</td></tr>
+        </tbody>
+      </table>
+
+      <p class="size-caption" style="margin-top:28px;">Men's Sizing</p>
+      <table class="size-table">
+        <thead>
+          <tr><th>Size</th><th>Chest</th><th>Waist</th><th>Shoulder</th><th>Length</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>S</td><td>88–92</td><td>74–78</td><td>43</td><td>68</td></tr>
+          <tr><td>M</td><td>93–97</td><td>79–83</td><td>45</td><td>70</td></tr>
+          <tr><td>L</td><td>98–103</td><td>84–88</td><td>47</td><td>72</td></tr>
+          <tr><td>XL</td><td>104–109</td><td>89–94</td><td>49</td><td>74</td></tr>
+          <tr><td>XXL</td><td>110–116</td><td>95–101</td><td>51</td><td>76</td></tr>
+        </tbody>
+      </table>
+
+      <h3>How to Measure</h3>
+      <ul>
+        <li><strong>Chest:</strong> Measure around the fullest part of your chest, keeping the tape horizontal.</li>
+        <li><strong>Waist:</strong> Measure around your natural waist, the narrowest part of your torso.</li>
+        <li><strong>Hips:</strong> Measure around the fullest part of your hips, approximately 20cm below your waist.</li>
+        <li><strong>Shoulder:</strong> Measure from shoulder seam to shoulder seam across the back.</li>
+      </ul>
+      <p>Our garments are designed for a contemporary, slightly fitted silhouette. If you prefer a more relaxed fit, size up. Product pages include specific fit notes where relevant.</p>
+    </div>
+  </section>
+
+  <!-- FRANCHISE ENQUIRY -->
+  <section id="franchise-enquiry" class="info-section">
+    <div class="info-section__eyebrow">— 05 / franchise enquiry</div>
+    <h2 class="info-section__title">Franchise Enquiry</h2>
+    <div class="info-section__body">
+      <p>We're selectively exploring retail and franchise partnerships in key Indian cities. If you have a premium retail space and a genuine love for the brand, we'd like to hear from you.</p>
+      <h3>What We're Looking For</h3>
+      <ul>
+        <li>Retail spaces in high-footfall, premium locations (malls, high streets, design districts).</li>
+        <li>Operators with proven experience in fashion retail or premium consumer goods.</li>
+        <li>Minimum space: 400 sq. ft., with clean sightlines and natural light where possible.</li>
+        <li>Cities currently under consideration: Mumbai, Delhi, Bengaluru, Hyderabad, Pune, Chennai.</li>
+      </ul>
+      <p>Fill in the form below and our partnerships team will reach out within 5 business days.</p>
+    </div>
+    <form class="info-form" onsubmit="submitEnquiry(event, 'franchise')">
+      <div><label>Full Name</label><input type="text" placeholder="Your name" required></div>
+      <div><label>City</label><input type="text" placeholder="City where the space is located" required></div>
+      <div><label>Email</label><input type="email" placeholder="your@email.com" required></div>
+      <div><label>Phone</label><input type="tel" placeholder="+91 98765 43210"></div>
+      <div class="info-form__full"><label>Space Description</label><textarea placeholder="Tell us about the location — area, sq. footage, current tenants nearby, footfall estimates…"></textarea></div>
+      <button type="submit" class="info-form__submit">Submit Enquiry</button>
+    </form>
+  </section>
+
+  <!-- BULK ORDERS -->
+  <section id="bulk-orders" class="info-section">
+    <div class="info-section__eyebrow">— 06 / bulk orders</div>
+    <h2 class="info-section__title">Bulk Orders</h2>
+    <div class="info-section__body">
+      <p>Corporate gifting, employee uniforms, event merchandise, college fests — we handle bulk orders for organisations and events.</p>
+      <h3>Minimum Order Quantities</h3>
+      <ul>
+        <li>Standard catalogue items: Minimum 10 units per style/size.</li>
+        <li>Custom branding (embroidery/print): Minimum 25 units per design.</li>
+        <li>Fully custom product development: Minimum 100 units per style.</li>
+      </ul>
+      <h3>Pricing</h3>
+      <p>Bulk orders receive tiered discounts: 10% off on 10–24 units, 15% on 25–49 units, 20% on 50+ units. Discounts apply to base product prices and cannot be combined with active site promotions.</p>
+      <h3>Lead Time</h3>
+      <p>Standard catalogue orders: 7–10 business days. Custom branding orders: 14–21 business days. Fully custom development: 45–60 business days from approved sample.</p>
+      <p>Submit your requirement below and we'll send a formal quotation within 48 hours.</p>
+    </div>
+    <form class="info-form" onsubmit="submitEnquiry(event, 'bulk')">
+      <div><label>Contact Person</label><input type="text" placeholder="Your name" required></div>
+      <div><label>Organisation</label><input type="text" placeholder="Company / college / event name" required></div>
+      <div><label>Email</label><input type="email" placeholder="your@email.com" required></div>
+      <div><label>Phone</label><input type="tel" placeholder="+91 98765 43210"></div>
+      <div>
+        <label>Approximate Quantity</label>
+        <select>
+          <option>10–24 units</option>
+          <option>25–49 units</option>
+          <option>50–99 units</option>
+          <option>100+ units</option>
+        </select>
+      </div>
+      <div>
+        <label>Requirement Type</label>
+        <select>
+          <option>Standard catalogue items</option>
+          <option>Custom branding on catalogue items</option>
+          <option>Fully custom product development</option>
+        </select>
+      </div>
+      <div class="info-form__full"><label>Details</label><textarea placeholder="Items you're interested in, event/use case, required delivery date…"></textarea></div>
+      <button type="submit" class="info-form__submit">Get a Quote</button>
+    </form>
+  </section>
+
+  <!-- STORE LOCATIONS -->
+  <section id="store-locations" class="info-section">
+    <div class="info-section__eyebrow">— 07 / store locations</div>
+    <h2 class="info-section__title">Store Locations</h2>
+    <div class="info-section__body">
+      <p>We operate one flagship studio in Kolkata where drops are available for in-person pickup. Additional retail locations are opening in 2026–27. Follow us on Instagram for announcements.</p>
+    </div>
+    <div class="stores-grid">
+      <div class="store-card">
+        <div class="store-card__city">Kolkata</div>
+        <div class="store-card__addr">
+          Studio HAWT!<br>
+          14B Rabindra Sarani, Shyambazar<br>
+          Kolkata, West Bengal 700004
+        </div>
+        <div class="store-card__hours">Mon–Sat · 11AM–8PM · Sun closed</div>
+      </div>
+      <div class="store-card" style="opacity: 0.5;">
+        <div class="store-card__city">Mumbai</div>
+        <div class="store-card__addr" style="font-style:italic;">Coming 2026 — location TBC.<br>Mailing list subscribers notified first.</div>
+        <div class="store-card__hours">Opening · Q4 2026</div>
+      </div>
+      <div class="store-card" style="opacity: 0.5;">
+        <div class="store-card__city">Delhi</div>
+        <div class="store-card__addr" style="font-style:italic;">Coming 2027 — location TBC.<br>Follow us for updates.</div>
+        <div class="store-card__hours">Opening · Q2 2027</div>
+      </div>
+      <div class="store-card" style="opacity: 0.5;">
+        <div class="store-card__city">Bengaluru</div>
+        <div class="store-card__addr" style="font-style:italic;">Under evaluation — interested in a franchise opportunity? See above.</div>
+        <div class="store-card__hours">TBC</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#sustainability">sustainability</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#terms-conditions">terms &amp; conditions</a>
+        <a href="/legal.html#refund-policy">refund policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#franchise-enquiry">franchise enquiry</a>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#events">events</a>
+        <a href="/support.html#store-locations">store locations</a>
+        <a href="/about.html#lookbook">lookbook</a>
+        <a href="/about.html#our-story">press</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="./shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <div id="cart-drawer" class="hawt-cart" aria-label="shopping bag" role="dialog" aria-modal="true"></div>
+  <div id="cart-overlay" class="hawt-cart-overlay"></div>
+  <footer id="cart-footer" class="hawt-cart__foot"></footer>
+  <div id="mobile-nav" class="hawt-mobile-nav" aria-hidden="true">
+    <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">×</button>
+    <nav class="hawt-mobile-nav__links">
+      <a href="./shop.html?cat=New%20In">new in</a>
+      <a href="./shop.html?cat=Sale">sale</a>
+      <a href="./shop.html?cat=Dresses">dresses</a>
+      <a href="./shop.html?cat=Shirts">shirts</a>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+      <a href="./shop.html?cat=Co-ords">co-ords</a>
+      <a href="./shop.html?cat=Clearance">clearance</a>
+    </nav>
+  </div>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/header.js"></script>
+  <script src="./js/cart.js"></script>
+  <script>
+    function toggleFaq(btn) {
+      const item = btn.closest('.faq-item');
+      const wasOpen = item.classList.contains('is-open');
+      document.querySelectorAll('.faq-item.is-open').forEach(el => el.classList.remove('is-open'));
+      if (!wasOpen) item.classList.add('is-open');
+    }
+
+    function submitEnquiry(e, type) {
+      e.preventDefault();
+      const btn = e.target.querySelector('button[type=submit]');
+      btn.textContent = 'Submitted ✓';
+      btn.disabled = true;
+      btn.style.background = '#2e7d32';
+      setTimeout(() => {
+        btn.textContent = type === 'franchise' ? 'Submit Enquiry' : 'Get a Quote';
+        btn.disabled = false;
+        btn.style.background = '';
+        e.target.reset();
+      }, 4000);
+    }
+
+    // Auto-open FAQ section if URL hash points to it
+    if (window.location.hash === '#faq') {
+      const first = document.querySelector('.faq-item');
+      if (first) first.classList.add('is-open');
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .info-hero {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      padding: 100px 48px 72px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .info-hero__eyebrow {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--hawt-sand);
+    }
+    .info-hero__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(64px, 10vw, 140px);
+      text-transform: uppercase; line-height: 0.9;
+      letter-spacing: var(--hawt-track-display-tight);
+    }
+    .info-hero__sub {
+      font-size: 15px; color: rgba(244,241,236,0.65);
+      max-width: 520px; line-height: 1.7; margin-top: 8px;
+    }
+
+    /* Sticky section nav */
+    .info-nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--hawt-bone);
+      border-bottom: 1px solid var(--hawt-hairline);
+      display: flex; align-items: center; gap: 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .info-nav::-webkit-scrollbar { display: none; }
+    .info-nav a {
+      flex-shrink: 0;
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--hawt-ash); text-decoration: none;
+      padding: 14px 20px;
+      border-right: 1px solid var(--hawt-hairline);
+      transition: color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .info-nav a:hover { color: var(--hawt-ink); background: rgba(0,0,0,0.03); }
+    .info-nav a.is-active { color: var(--hawt-ink); border-bottom: 2px solid var(--hawt-ink); }
+
+    /* Section layout */
+    .info-section {
+      max-width: 860px; margin: 0 auto;
+      padding: 80px 48px;
+      border-bottom: 1px solid var(--hawt-hairline);
+    }
+    .info-section:last-of-type { border-bottom: none; }
+    .info-section__eyebrow {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--hawt-sand); margin-bottom: 20px;
+    }
+    .info-section__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(40px, 6vw, 80px);
+      text-transform: uppercase; line-height: 0.95;
+      margin-bottom: 32px;
+    }
+    .info-section__body { font-size: 15px; line-height: 1.8; color: var(--hawt-ink); }
+    .info-section__body p { margin-bottom: 20px; }
+    .info-section__body p:last-child { margin-bottom: 0; }
+    .info-section__body strong { font-weight: 600; }
+
+    /* Stat grid */
+    .info-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1px; background: var(--hawt-hairline);
+      margin: 40px 0; border: 1px solid var(--hawt-hairline);
+    }
+    .info-stat {
+      background: var(--hawt-bone);
+      padding: 32px 24px;
+    }
+    .info-stat__num {
+      font-family: var(--hawt-font-display);
+      font-size: 52px; line-height: 1;
+      margin-bottom: 8px;
+    }
+    .info-stat__label {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-ash);
+    }
+
+    /* Pull quote */
+    .info-quote {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      padding: 60px 48px; margin: 0;
+    }
+    .info-quote__text {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(28px, 4vw, 52px);
+      text-transform: uppercase; line-height: 1.1;
+      max-width: 700px;
+    }
+    .info-quote__attr {
+      margin-top: 20px; font-family: var(--hawt-font-mono);
+      font-size: 10px; letter-spacing: 0.14em; color: var(--hawt-sand);
+      text-transform: uppercase;
+    }
+
+    /* Events list */
+    .info-events { list-style: none; margin: 0; padding: 0; }
+    .info-events li {
+      display: grid; grid-template-columns: 80px 1fr;
+      gap: 24px; align-items: start;
+      padding: 20px 0; border-bottom: 1px solid var(--hawt-hairline);
+    }
+    .info-events li:last-child { border-bottom: none; }
+    .info-event__date {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.1em; text-transform: uppercase; color: var(--hawt-sand);
+      padding-top: 2px;
+    }
+    .info-event__name { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+    .info-event__loc { font-size: 13px; color: var(--hawt-ash); }
+
+    /* Lookbook grid */
+    .info-lookbook {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2px; margin-top: 32px;
+    }
+    .info-lookbook__item {
+      aspect-ratio: 2/3; overflow: hidden; background: var(--hawt-hairline);
+      position: relative;
+    }
+    .info-lookbook__img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .5s; }
+    .info-lookbook__item:hover .info-lookbook__img { transform: scale(1.04); }
+    .info-lookbook__cap {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: linear-gradient(to top, rgba(10,10,10,0.7) 0%, transparent 60%);
+      padding: 16px 14px 14px;
+      font-family: var(--hawt-font-mono); font-size: 9px;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--hawt-bone);
+    }
+
+    @media (max-width: 768px) {
+      .info-hero { padding: 72px 24px 48px; }
+      .info-section { padding: 56px 24px; }
+      .info-stats { grid-template-columns: 1fr; }
+      .info-quote { padding: 48px 24px; }
+      .info-lookbook { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="about">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" aria-label="search"><span id="icon-search"></span></button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist"><span id="icon-heart"></span></button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account"><span id="icon-user"></span></a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <div class="info-hero">
+    <div class="info-hero__eyebrow">— kolkata born, globally worn</div>
+    <div class="info-hero__title">About<br>HAWT!</div>
+    <p class="info-hero__sub">We build clothes for people who move fast, dress sharp, and don't wait for permission. Born on the streets of Kolkata. Worn everywhere else.</p>
+  </div>
+
+  <!-- SECTION NAV -->
+  <nav class="info-nav" aria-label="page sections">
+    <a href="#brand-story">Brand Story</a>
+    <a href="#why-hawt">Why HAWT?</a>
+    <a href="#sustainability">Sustainability</a>
+    <a href="#made-in-kolkata">Made in Kolkata</a>
+    <a href="#our-story">Our Story</a>
+    <a href="#events">Events</a>
+    <a href="#lookbook">Lookbook</a>
+  </nav>
+
+  <!-- BRAND STORY -->
+  <section id="brand-story" class="info-section">
+    <div class="info-section__eyebrow">— 01 / brand story</div>
+    <h2 class="info-section__title">The Story</h2>
+    <div class="info-section__body">
+      <p>HAWT! started in 2022 as a single rack in a North Kolkata warehouse, run by two people who were tired of paying import prices for clothes that didn't fit Indian bodies or Indian streets. The idea was simple: premium streetwear, designed in Kolkata, made in Kolkata, priced for people who actually live here.</p>
+      <p>The first drop sold out in 11 hours. We've been selling out ever since.</p>
+      <p>We don't do seasons in the traditional sense. We do <strong>drops</strong> — small, deliberate, gone when they're gone. Every piece is designed to outlast trends and outperform fast fashion in every measurable way: construction, fabric quality, and the way it makes you feel when you put it on.</p>
+      <p>Three years in, we've grown from that single rack to 41 SKUs, a national delivery footprint, and a community of repeat customers who treat restocks like events. We're proud of what we've built — and we're just getting started.</p>
+    </div>
+    <div class="info-stats">
+      <div class="info-stat">
+        <div class="info-stat__num">41</div>
+        <div class="info-stat__label">active SKUs</div>
+      </div>
+      <div class="info-stat">
+        <div class="info-stat__num">4</div>
+        <div class="info-stat__label">drops per year</div>
+      </div>
+      <div class="info-stat">
+        <div class="info-stat__num">11h</div>
+        <div class="info-stat__label">first drop sellout</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PULL QUOTE -->
+  <div class="info-quote">
+    <div class="info-quote__text">"We don't make clothes for everyone. We make clothes for the people who don't need to be told what's cool."</div>
+    <div class="info-quote__attr">— HAWT! Founders</div>
+  </div>
+
+  <!-- WHY HAWT? -->
+  <section id="why-hawt" class="info-section">
+    <div class="info-section__eyebrow">— 02 / why hawt?</div>
+    <h2 class="info-section__title">Why HAWT?</h2>
+    <div class="info-section__body">
+      <p><strong>Because you're paying for the thing, not the middlemen.</strong> No retail markup. No showroom rent. No brand ambassadors on a ₹2 crore retainer. Just the garment, at a fair price, shipped directly to you.</p>
+      <p><strong>Because quality is non-negotiable.</strong> Every fabric is tested before it touches a pattern. We use 220–280 GSM cotton on tees, Japanese-sourced viscose on our resort prints, and linen blends that actually breathe. Seams are double-stitched. Hems are finished properly. Buttons don't fall off.</p>
+      <p><strong>Because scarcity keeps standards high.</strong> Small drops mean we never compromise on materials to hit volume targets. If we can't make it right, we don't make it. Simple.</p>
+      <p><strong>Because the community matters.</strong> Our customers are the first to know about drops, get early access to restocks, and have a direct line to the team for feedback. We've changed designs based on DMs. We've cancelled drops because the samples weren't good enough. We answer our own messages.</p>
+    </div>
+  </section>
+
+  <!-- SUSTAINABILITY -->
+  <section id="sustainability" class="info-section">
+    <div class="info-section__eyebrow">— 03 / sustainability</div>
+    <h2 class="info-section__title">How We Build</h2>
+    <div class="info-section__body">
+      <p>We don't use the word "sustainable" as a marketing term. Here's what we actually do:</p>
+      <p><strong>No overproduction.</strong> Every drop is sized to known demand. We use waitlists before production runs to avoid dead stock. Leftover units go to our Clearance section — never a landfill.</p>
+      <p><strong>Natural fibres first.</strong> Our core range is cotton, linen, and viscose from traceable mills. We avoid polyester blends unless technical performance demands it. Natural fibres biodegrade. Polyester doesn't.</p>
+      <p><strong>Local manufacturing.</strong> Every garment is cut and sewn within 40 km of our studio in Kolkata. Short supply chains mean lower transport emissions and direct oversight of working conditions. We visit our production partners weekly — not annually.</p>
+      <p><strong>Packaging.</strong> All mailers are 100% recycled paper-based. No plastic poly bags. Hang tags are printed on recycled kraft board with soy-based ink. We're working on eliminating adhesive labels by 2026.</p>
+      <p>Is there more we could do? Always. We'll keep updating this page as we improve.</p>
+    </div>
+  </section>
+
+  <!-- MADE IN KOLKATA -->
+  <section id="made-in-kolkata" class="info-section">
+    <div class="info-section__eyebrow">— 04 / made in kolkata</div>
+    <h2 class="info-section__title">Made in Kolkata</h2>
+    <div class="info-section__body">
+      <p>Kolkata has been making clothes for the world since the 1800s. The garment industry here runs deep — generations of master tailors, pattern cutters, and finishers who carry technical knowledge that no machine can replicate. We work with these people.</p>
+      <p>Our studio is in North Kolkata, five minutes from where our founding team grew up. We source most of our base fabrics from Surat and Tirupur, the handwork from local artisans in the Shyambazar district, and all production is done in-house at a facility we manage directly.</p>
+      <p><strong>What "made in Kolkata" means for quality:</strong></p>
+      <p>Indian manufacturing — when done properly — is world-class. Our tailors have worked with export-grade orders for European luxury brands. The difference between a ₹400 fast fashion tee and a ₹1,299 HAWT! tee isn't magic: it's fabric weight, stitch density, and the time taken on the finish. We don't rush any of that.</p>
+      <p>Every piece is inspected by hand before dispatch. Defects don't ship — they get recut or written off. We'd rather eat the loss than compromise the product.</p>
+    </div>
+  </section>
+
+  <!-- OUR STORY -->
+  <section id="our-story" class="info-section">
+    <div class="info-section__eyebrow">— 05 / our story</div>
+    <h2 class="info-section__title">Our Story</h2>
+    <div class="info-section__body">
+      <p>HAWT! was started by two school friends who'd spent years wearing imported streetwear that cost too much, fit too badly, and came with logos they didn't care about. The premise of the brand was born in a conversation over tea in 2021: <em>what if we just made the thing ourselves?</em></p>
+      <p><strong>2022 — The First Drop.</strong> Twelve pieces. One colourway each. Sold through Instagram DMs, delivered by the founders themselves on a rented motorcycle. Sold out in 11 hours. We knew we were on to something.</p>
+      <p><strong>2023 — Building the System.</strong> We moved out of a rented spare room and into a proper production facility. Hired our first team members. Built the website. Ran four drops, each bigger than the last. Started taking returns without a fight.</p>
+      <p><strong>2024 — Going National.</strong> Launched courier partnerships for pan-India delivery. Grew the catalogue to 30+ SKUs across four categories. The community grew with us — our mailing list passed 15,000 subscribers on no advertising budget.</p>
+      <p><strong>2025–Present.</strong> 41 active products. A dedicated admin platform. A waitlist system that fills before drops go live. A team of 12 people who care about the product as much as we do. Still figuring it out. Still loving every second of it.</p>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section id="events" class="info-section">
+    <div class="info-section__eyebrow">— 06 / events</div>
+    <h2 class="info-section__title">Events</h2>
+    <div class="info-section__body">
+      <p>We do pop-ups, trunk shows, and community events throughout the year — mostly in Kolkata, occasionally in other cities when a drop feels big enough. Subscribe to the mailing list or follow us on Instagram to be the first to know.</p>
+    </div>
+    <ul class="info-events" style="margin-top: 32px;">
+      <li>
+        <div class="info-event__date">Jul 2026</div>
+        <div>
+          <div class="info-event__name">Drop / 05 Launch Pop-Up</div>
+          <div class="info-event__loc">Studio HAWT!, North Kolkata — by invite</div>
+        </div>
+      </li>
+      <li>
+        <div class="info-event__date">Aug 2026</div>
+        <div>
+          <div class="info-event__name">Summer Edit Trunk Show</div>
+          <div class="info-event__loc">Experimenter Gallery, Kolkata — open to all</div>
+        </div>
+      </li>
+      <li>
+        <div class="info-event__date">Oct 2026</div>
+        <div>
+          <div class="info-event__name">Festive Drop Preview</div>
+          <div class="info-event__loc">Location TBC — mailing list exclusive</div>
+        </div>
+      </li>
+      <li>
+        <div class="info-event__date">Dec 2026</div>
+        <div>
+          <div class="info-event__name">Year-End Warehouse Sale</div>
+          <div class="info-event__loc">Studio HAWT!, North Kolkata — open to all</div>
+        </div>
+      </li>
+    </ul>
+  </section>
+
+  <!-- LOOKBOOK -->
+  <section id="lookbook" class="info-section" style="max-width: 1100px;">
+    <div class="info-section__eyebrow">— 07 / lookbook</div>
+    <h2 class="info-section__title">Drop / 04 Lookbook</h2>
+    <div class="info-section__body">
+      <p>Shot on location in Kolkata. No stylist. No retouching. Real people, real clothes, real light.</p>
+    </div>
+    <div class="info-lookbook">
+      <a href="./shop.html?cat=Shirts" class="info-lookbook__item">
+        <img class="info-lookbook__img" src="./images/products/top-12.png" alt="Tropical Eye Print Resort Shirt" loading="lazy">
+        <div class="info-lookbook__cap">Shirts — Drop / 04</div>
+      </a>
+      <a href="./shop.html?cat=Co-ords" class="info-lookbook__item">
+        <img class="info-lookbook__img" src="./images/products/coord-5.png" alt="Dark Green Geometric Co-ord" loading="lazy">
+        <div class="info-lookbook__cap">Co-ords — Drop / 04</div>
+      </a>
+      <a href="./shop.html?cat=Dresses" class="info-lookbook__item">
+        <img class="info-lookbook__img" src="./images/products/dress-6.png" alt="Ivory Floral Cutout Maxi" loading="lazy">
+        <div class="info-lookbook__cap">Dresses — Drop / 04</div>
+      </a>
+      <a href="./shop.html?cat=Bottoms" class="info-lookbook__item">
+        <img class="info-lookbook__img" src="./images/products/bottom-7.png" alt="Wide-Leg Boyfriend Jeans" loading="lazy">
+        <div class="info-lookbook__cap">Bottoms — Drop / 04</div>
+      </a>
+      <a href="./shop.html?cat=Shirts" class="info-lookbook__item">
+        <img class="info-lookbook__img" src="./images/products/top-16.png" alt="Soft Days Tropical Resort Shirt" loading="lazy">
+        <div class="info-lookbook__cap">Shirts — Women's Edit</div>
+      </a>
+      <a href="./shop.html?cat=Co-ords" class="info-lookbook__item">
+        <img class="info-lookbook__img" src="./images/products/coord-2.png" alt="Sage Floral Co-ord" loading="lazy">
+        <div class="info-lookbook__cap">Co-ords — Women's Edit</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#sustainability">sustainability</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#terms-conditions">terms &amp; conditions</a>
+        <a href="/legal.html#refund-policy">refund policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#franchise-enquiry">franchise enquiry</a>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#events">events</a>
+        <a href="/support.html#store-locations">store locations</a>
+        <a href="/about.html#lookbook">lookbook</a>
+        <a href="/about.html#our-story">press</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="./shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <!-- CART DRAWER (global) -->
+  <div id="cart-drawer" class="hawt-cart" aria-label="shopping bag" role="dialog" aria-modal="true"></div>
+  <div id="cart-overlay" class="hawt-cart-overlay"></div>
+  <footer id="cart-footer" class="hawt-cart__foot"></footer>
+
+  <!-- Mobile nav overlay -->
+  <div id="mobile-nav" class="hawt-mobile-nav" aria-hidden="true">
+    <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">×</button>
+    <nav class="hawt-mobile-nav__links">
+      <a href="./shop.html?cat=New%20In">new in</a>
+      <a href="./shop.html?cat=Sale">sale</a>
+      <a href="./shop.html?cat=Dresses">dresses</a>
+      <a href="./shop.html?cat=Shirts">shirts</a>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+      <a href="./shop.html?cat=Co-ords">co-ords</a>
+      <a href="./shop.html?cat=Clearance">clearance</a>
+    </nav>
+  </div>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/header.js"></script>
+  <script src="./js/cart.js"></script>
+</body>
+</html>

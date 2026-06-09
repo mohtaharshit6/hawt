@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop All — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .hawt-tile:hover .hawt-tile__img--main { opacity: 0; }
+    .hawt-tile:hover .hawt-tile__img--alt  { opacity: 1; }
+    .hawt-tile__img--main, .hawt-tile__img--alt {
+      transition: opacity var(--hawt-dur-image) var(--hawt-ease), transform var(--hawt-dur-image) var(--hawt-ease);
+    }
+
+    /* ---- Top sort bar ---- */
+    .plp-topbar {
+      position: sticky;
+      top: 114px; /* 32 announce + 54 header + 28 subnav */
+      z-index: 90;
+      background: var(--hawt-bone);
+      border-bottom: 1px solid var(--hawt-hairline);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 var(--hawt-page-x);
+      height: 44px;
+    }
+    .plp-topbar__count {
+      font-family: var(--hawt-font-mono);
+      font-size: 12px; color: var(--hawt-ash); letter-spacing: 0.06em;
+    }
+    .plp-topbar__right { display: flex; align-items: center; gap: 12px; }
+    .plp-topbar__label {
+      font-size: 10px; font-weight: 600; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--hawt-ash);
+    }
+    .plp-topbar__select {
+      border: 1px solid var(--hawt-hairline); background: transparent;
+      font-family: var(--hawt-font-body); font-size: 12px; color: var(--hawt-ink);
+      padding: 6px 30px 6px 12px; cursor: pointer; outline: none;
+      appearance: none; -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%237A7873' stroke-width='1.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 8px center;
+      transition: border-color var(--hawt-dur-fast) var(--hawt-ease);
+    }
+    .plp-topbar__select:focus { border-color: var(--hawt-ink); }
+
+    /* ---- Category filter pills (below topbar) ---- */
+    .plp-cats {
+      padding: 14px var(--hawt-page-x);
+      display: flex; gap: 8px; flex-wrap: wrap;
+      border-bottom: 1px solid var(--hawt-hairline);
+      background: var(--hawt-bone);
+    }
+    .plp-cat-pill {
+      font-size: 11px; font-weight: 500; letter-spacing: 0.1em;
+      text-transform: lowercase; padding: 6px 16px;
+      border: 1px solid var(--hawt-hairline); background: transparent;
+      color: var(--hawt-ink); cursor: pointer; text-decoration: none;
+      transition: all var(--hawt-dur-fast) var(--hawt-ease);
+    }
+    .plp-cat-pill:hover,
+    .plp-cat-pill.is-sel {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      border-color: var(--hawt-ink);
+    }
+
+    /* ---- Product grid ---- */
+    .plp-grid-wrap {
+      padding: 32px var(--hawt-page-x) 64px;
+    }
+
+    /* ---- Product card extras (star rating + sale price) ---- */
+    .plp-tile-stars { display: flex; align-items: center; gap: 2px; margin-top: 3px; }
+    .plp-tile-stars svg { color: var(--hawt-sand); }
+    .plp-tile-stars__count { font-family: var(--hawt-font-mono); font-size: 10px; color: var(--hawt-ash); margin-left: 4px; }
+    .plp-tile-sale { display: flex; align-items: center; gap: 8px; margin-top: 2px; }
+    .plp-tile-sale__now { font-size: 14px; font-weight: 600; color: #c0392b; }
+    .plp-tile-sale__orig { font-size: 12px; color: var(--hawt-ash); text-decoration: line-through; }
+
+    /* ---- Pagination ---- */
+    .plp-pagination {
+      display: flex; align-items: center; justify-content: center; gap: 4px;
+      padding: 32px 0 64px;
+      border-top: 1px solid var(--hawt-hairline);
+    }
+    .plp-page-btn {
+      min-width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center;
+      border: 1px solid transparent; background: transparent;
+      font-family: var(--hawt-font-mono); font-size: 12px; color: var(--hawt-ink);
+      cursor: pointer; padding: 0 8px;
+      transition: all var(--hawt-dur-fast) var(--hawt-ease);
+    }
+    .plp-page-btn:hover { border-color: var(--hawt-hairline); }
+    .plp-page-btn.is-active {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      border-color: var(--hawt-ink);
+    }
+    .plp-page-btn:disabled { opacity: 0.3; cursor: default; }
+    .plp-page-ellipsis { font-family: var(--hawt-font-mono); font-size: 12px; color: var(--hawt-ash); padding: 0 4px; }
+
+    @media (max-width: 768px) {
+      .plp-topbar { top: 86px; /* no subnav on mobile */ }
+      .plp-grid-wrap { padding: 20px 16px 48px; }
+      .plp-grid-wrap .hawt-grid--3 { grid-template-columns: repeat(2, 1fr); gap: 16px 12px; }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="plp">
+
+  <!-- HEADER WRAP -->
+  <div id="header-wrap" class="hawt-header-wrap">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" class="hawt-header__nav-link" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" class="hawt-header__nav-link" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" class="hawt-header__nav-link" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" onclick="alert('search coming soon')" aria-label="search">
+          <span id="icon-search"></span>
+        </button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist">
+          <span id="icon-heart"></span>
+        </button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" title="my account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account">
+          <span id="icon-user"></span>
+        </a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <!-- SECONDARY NAV ROW -->
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- BREADCRUMB -->
+  <div style="padding:12px var(--hawt-page-x);border-bottom:1px solid var(--hawt-hairline);background:var(--hawt-bone);">
+    <span style="font-size:11px;color:var(--hawt-ash);letter-spacing:0.06em;">
+      <a href="./index.html" style="color:var(--hawt-ash);text-decoration:none;">home</a>
+      <span style="margin:0 6px;opacity:0.4;">/</span>
+      <span style="color:var(--hawt-ink);">all products</span>
+    </span>
+  </div>
+
+  <!-- TOP SORT BAR -->
+  <div class="plp-topbar">
+    <span class="plp-topbar__count" id="plp-count">520 products</span>
+    <div class="plp-topbar__right">
+      <span class="plp-topbar__label">sort</span>
+      <select class="plp-topbar__select" id="sort-select" aria-label="Sort products">
+        <option value="featured">Featured</option>
+        <option value="popular">Popular Styles</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="new-old">New to Old</option>
+        <option value="discounts">Discounts</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- CATEGORY PILLS -->
+  <div class="plp-cats">
+    <a href="./shop.html" class="plp-cat-pill is-sel">all</a>
+    <a href="./shop.html?cat=New%20In" class="plp-cat-pill">new in</a>
+    <a href="./shop.html?cat=Sale" class="plp-cat-pill" style="color:#c0392b;border-color:#c0392b;">sale</a>
+    <a href="./shop.html?cat=Dresses" class="plp-cat-pill">dresses</a>
+    <a href="./shop.html?cat=Shirts" class="plp-cat-pill">shirts</a>
+    <a href="./shop.html?cat=Bottoms" class="plp-cat-pill">bottoms</a>
+    <a href="./shop.html?cat=Co-ords" class="plp-cat-pill">co-ords</a>
+    <a href="./shop.html?cat=Accessories" class="plp-cat-pill">accessories</a>
+    <a href="./shop.html?cat=Clearance" class="plp-cat-pill" style="color:#c0392b;border-color:#c0392b;">clearance</a>
+    <a href="./shop.html?cat=Clearance" class="plp-cat-pill" style="color:#c0392b;border-color:#c0392b;">clearance sale</a>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <div class="plp-grid-wrap">
+    <div class="hawt-grid hawt-grid--3" id="plp-product-grid">
+
+      <!-- Product 1 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=600&q=80&auto=format&fit=crop"
+            alt="Oversized Ink Tee" loading="lazy">
+          <div class="hawt-tile__badge">new</div>
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Oversized Ink Tee</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(47)</span>
+          </div>
+          <div class="plp-tile-sale">
+            <span class="plp-tile-sale__now">₹1,199</span>
+            <span class="plp-tile-sale__orig">₹1,499</span>
+          </div>
+        </div>
+        <div class="hawt-tile__sub">ink · relaxed fit</div>
+      </div>
+
+      <!-- Product 2 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600&q=80&auto=format&fit=crop"
+            alt="Printed Tunic" loading="lazy">
+          <div class="hawt-tile__badge">drop / 03</div>
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Printed Tunic</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(31)</span>
+          </div>
+          <div class="hawt-tile__price">₹2,299</div>
+        </div>
+        <div class="hawt-tile__sub">bone · floral print</div>
+      </div>
+
+      <!-- Product 3 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1496747611176-843222e1e57c?w=600&q=80&auto=format&fit=crop"
+            alt="Linen Midi Dress" loading="lazy">
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Linen Midi Dress</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(18)</span>
+          </div>
+          <div class="plp-tile-sale">
+            <span class="plp-tile-sale__now">₹2,799</span>
+            <span class="plp-tile-sale__orig">₹3,499</span>
+          </div>
+        </div>
+        <div class="hawt-tile__sub">sand · midi length</div>
+      </div>
+
+      <!-- Product 4 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1483985988355-763728e1935b?w=600&q=80&auto=format&fit=crop"
+            alt="Co-Ord Set" loading="lazy">
+          <div class="hawt-tile__badge" style="background:var(--hawt-sand);color:var(--hawt-ink);">35% off</div>
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Co-Ord Set</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(62)</span>
+          </div>
+          <div class="plp-tile-sale">
+            <span class="plp-tile-sale__now">₹3,249</span>
+            <span class="plp-tile-sale__orig">₹4,999</span>
+          </div>
+        </div>
+        <div class="hawt-tile__sub">ash · top + bottom</div>
+      </div>
+
+      <!-- Product 5 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1539109136881-3be0616acf4b?w=600&q=80&auto=format&fit=crop"
+            alt="Embellished Shirt" loading="lazy">
+          <div class="hawt-tile__badge">restock</div>
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Embellished Shirt</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(9)</span>
+          </div>
+          <div class="hawt-tile__price">₹1,799</div>
+        </div>
+        <div class="hawt-tile__sub">wine · embellished</div>
+      </div>
+
+      <!-- Product 6 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1485968579580-b6d095142e6e?w=600&q=80&auto=format&fit=crop"
+            alt="Floral Midi Dress" loading="lazy">
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Floral Midi Dress</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(24)</span>
+          </div>
+          <div class="plp-tile-sale">
+            <span class="plp-tile-sale__now">₹2,199</span>
+            <span class="plp-tile-sale__orig">₹2,799</span>
+          </div>
+        </div>
+        <div class="hawt-tile__sub">pink · midi length</div>
+      </div>
+
+      <!-- Product 7 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80&auto=format&fit=crop"
+            alt="Power Blazer" loading="lazy">
+          <div class="hawt-tile__badge">new</div>
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Power Blazer</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(11)</span>
+          </div>
+          <div class="hawt-tile__price">₹4,499</div>
+        </div>
+        <div class="hawt-tile__sub">ink · structured fit</div>
+      </div>
+
+      <!-- Product 8 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=600&q=80&auto=format&fit=crop"
+            alt="Solid Kurti" loading="lazy">
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Solid Kurti</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(88)</span>
+          </div>
+          <div class="plp-tile-sale">
+            <span class="plp-tile-sale__now">₹899</span>
+            <span class="plp-tile-sale__orig">₹1,199</span>
+          </div>
+        </div>
+        <div class="hawt-tile__sub">blush · relaxed</div>
+      </div>
+
+      <!-- Product 9 -->
+      <div class="hawt-tile" onclick="location.href='./product.html'">
+        <div class="hawt-tile__image">
+          <img class="hawt-tile__img hawt-tile__img--main"
+            src="https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=600&q=80&auto=format&fit=crop"
+            alt="Drop Shoulder Hoodie" loading="lazy">
+          <div class="hawt-tile__badge">drop / 03</div>
+        </div>
+        <div class="hawt-tile__meta">
+          <div class="hawt-tile__name">Drop Shoulder Hoodie</div>
+          <div class="plp-tile-stars">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            <span class="plp-tile-stars__count">(73)</span>
+          </div>
+          <div class="hawt-tile__price">₹3,299</div>
+        </div>
+        <div class="hawt-tile__sub">charcoal · 280gsm fleece</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+  <div class="plp-pagination">
+    <button class="plp-page-btn" disabled aria-label="Previous">←</button>
+    <button class="plp-page-btn is-active">1</button>
+    <button class="plp-page-btn">2</button>
+    <button class="plp-page-btn">3</button>
+    <span class="plp-page-ellipsis">...</span>
+    <button class="plp-page-btn">22</button>
+    <button class="plp-page-btn" aria-label="Next">→</button>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#sustainability">sustainability</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#terms-conditions">terms &amp; conditions</a>
+        <a href="/legal.html#refund-policy">refund policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#franchise-enquiry">franchise enquiry</a>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#events">events</a>
+        <a href="/support.html#store-locations">store locations</a>
+        <a href="/about.html#lookbook">lookbook</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="/shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Bottoms">bottoms</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <!-- CART DRAWER -->
+  <div id="cart-scrim" class="hawt-cart__scrim"></div>
+  <aside id="cart-drawer" class="hawt-cart" aria-label="shopping bag">
+    <header class="hawt-cart__head">
+      <div>
+        <div class="hawt-meta">— your bag</div>
+        <div id="cart-title" class="hawt-cart__title">bag's empty.</div>
+      </div>
+      <button id="cart-close" class="hawt-cart__close" aria-label="close cart">
+        <span id="icon-x"></span>
+      </button>
+    </header>
+    <div id="cart-body" class="hawt-cart__body"></div>
+    <footer id="cart-footer" class="hawt-cart__foot"></footer>
+  </aside>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script>
+    document.getElementById('icon-search').innerHTML = icon('search', 18);
+    document.getElementById('icon-heart').innerHTML  = icon('heart', 18);
+    document.getElementById('icon-bag').innerHTML    = icon('shopping-bag', 18);
+    document.getElementById('icon-user').innerHTML   = icon('user', 18);
+    document.getElementById('icon-x').innerHTML      = icon('x', 20);
+
+    /* Category pill active state */
+    document.querySelectorAll('.plp-cat-pill').forEach(pill => {
+      pill.addEventListener('click', function(e) {
+        if (this.href && !this.href.includes('shop.html')) return;
+        e.preventDefault();
+        document.querySelectorAll('.plp-cat-pill').forEach(p => p.classList.remove('is-sel'));
+        this.classList.add('is-sel');
+      });
+    });
+
+    /* Pagination buttons */
+    document.querySelectorAll('.plp-page-btn:not([disabled])').forEach(btn => {
+      btn.addEventListener('click', function() {
+        if (this.textContent === '←' || this.textContent === '→') return;
+        document.querySelectorAll('.plp-page-btn').forEach(b => b.classList.remove('is-active'));
+        this.classList.add('is-active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  </script>
+  <script src="./js/header.js"></script>
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">&times;</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    /* Tile hover behavior is now fully handled in hawt-kit.css */
+    .hawt-tile__link { display: block; text-decoration: none; color: inherit; }
+  </style>
+</head>
+<body class="hawt" data-page="shop">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" aria-label="search"><span id="icon-search"></span></button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist"><span id="icon-heart"></span></button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account"><span id="icon-user"></span></a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <!-- SECONDARY NAV ROW -->
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- SHOP HEAD -->
+  <section class="hawt-shop__head hawt-section hawt-section--bone" style="padding-bottom: 0;">
+    <div class="hawt-meta">— the line · drop / 03</div>
+    <h1 class="hawt-display-xl">shop everything</h1>
+    <p class="hawt-shop__sub">a small, finite line. when it's gone, it's gone.</p>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="hawt-shop__bar">
+    <div class="hawt-shop__filters">
+      <button class="hawt-pill hawt-pill--sel" data-filter="all">all</button>
+      <button class="hawt-pill" data-filter="New In">new in</button>
+      <button class="hawt-pill" data-filter="Sale" style="color:#c0392b;">sale</button>
+      <button class="hawt-pill" data-filter="Dresses">dresses</button>
+      <button class="hawt-pill" data-filter="Shirts">shirts</button>
+      <button class="hawt-pill" data-filter="Bottoms">bottoms</button>
+      <button class="hawt-pill" data-filter="Co-ords">co-ords</button>
+      <button class="hawt-pill" data-filter="Accessories">accessories</button>
+      <button class="hawt-pill" data-filter="Clearance" style="color:#c0392b;">clearance</button>
+    </div>
+    <div class="hawt-shop__count"><span id="product-count">0</span> pieces</div>
+  </div>
+
+  <!-- PRODUCT GRID -->
+  <section class="hawt-section hawt-section--bone hawt-section--tight">
+    <div id="shop-grid" class="hawt-grid hawt-grid--3">
+      <!-- injected by shop.js -->
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#sustainability">sustainability</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#terms-conditions">terms &amp; conditions</a>
+        <a href="/legal.html#refund-policy">refund policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#franchise-enquiry">franchise enquiry</a>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#events">events</a>
+        <a href="/support.html#store-locations">store locations</a>
+        <a href="/about.html#lookbook">lookbook</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="/shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="/shop.html?cat=Bottoms">bottoms</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <!-- CART DRAWER -->
+  <div id="cart-scrim" class="hawt-cart__scrim"></div>
+  <aside id="cart-drawer" class="hawt-cart" aria-label="shopping bag">
+    <header class="hawt-cart__head">
+      <div>
+        <div class="hawt-meta">— your bag</div>
+        <div id="cart-title" class="hawt-cart__title">bag's empty.</div>
+      </div>
+      <button id="cart-close" class="hawt-cart__close" aria-label="close"><span id="icon-x"></span></button>
+    </header>
+    <div id="cart-body" class="hawt-cart__body"></div>
+    <footer id="cart-footer" class="hawt-cart__foot"></footer>
+  </aside>
+
+  <style>
+    .hawt-footer__link { display:block; background:transparent; border:0; color:inherit; padding:6px 0; text-align:left; cursor:pointer; font-size:13px; letter-spacing:0.06em; text-transform:lowercase; opacity:0.85; text-decoration:none; }
+    .hawt-footer__link:hover { color: var(--hawt-sand); opacity:1; }
+  </style>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script>
+    document.getElementById('icon-search').innerHTML = icon('search', 18);
+    document.getElementById('icon-heart').innerHTML  = icon('heart', 18);
+    document.getElementById('icon-bag').innerHTML    = icon('shopping-bag', 18);
+    document.getElementById('icon-user').innerHTML   = icon('user', 18);
+    document.getElementById('icon-x').innerHTML      = icon('x', 20);
+  </script>
+  <script src="./js/header.js"></script>
+  <script src="./js/shop.js"></script>
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">�</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
+  </div>
+</body>
+</html>

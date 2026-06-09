@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    body { overflow-x: hidden; }
+    .hawt-auth { min-height: 100vh; }
+    .auth-error { font-size: 12px; color: #c0392b; margin-top: 8px; min-height: 18px; }
+  </style>
+</head>
+<body class="hawt" data-page="auth">
+
+  <div class="hawt-auth">
+    <!-- LEFT: editorial art -->
+    <div class="hawt-auth__art">
+      <img src="https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=1400&q=80&auto=format&fit=crop" alt="">
+      <div class="hawt-auth__art-overlay">
+        <div class="hawt-meta hawt-meta--light">— members</div>
+        <h2 class="hawt-auth__art-title">
+          first<br>to know.<br>
+          <span class="hawt-accent">first</span><br>to fit.
+        </h2>
+        <p class="hawt-auth__art-sub">early access to drops. members-only pieces. nothing else.</p>
+      </div>
+    </div>
+
+    <!-- RIGHT: form panel -->
+    <div class="hawt-auth__panel">
+      <a href="./index.html" class="hawt-auth__brand">HAWT<span>!</span></a>
+
+      <div class="hawt-auth__tabs">
+        <button class="hawt-auth__tab is-sel" id="tab-login" onclick="switchTab('login')">sign in</button>
+        <button class="hawt-auth__tab" id="tab-register" onclick="switchTab('register')">create account</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form class="hawt-auth__form" id="login-form" onsubmit="handleLogin(event)">
+        <label class="hawt-field">
+          <span class="hawt-field__label">email</span>
+          <input class="hawt-input" type="email" name="email" placeholder="you@somewhere" required autocomplete="email">
+        </label>
+        <label class="hawt-field">
+          <span class="hawt-field__label">password</span>
+          <div class="hawt-pw-wrap">
+            <input class="hawt-input" id="login-pw" type="password" name="password" required autocomplete="current-password">
+            <button type="button" class="hawt-pw-toggle" aria-label="show password" data-target="login-pw"></button>
+          </div>
+        </label>
+        <div class="hawt-auth__row">
+          <label class="hawt-auth__check"><input type="checkbox"> keep me in</label>
+          <button type="button" class="hawt-link" onclick="showForgotMsg()">forgot it?</button>
+        </div>
+        <div class="auth-error" id="login-error"></div>
+        <button class="hawt-btn hawt-btn--primary hawt-auth__submit" type="submit" id="login-btn">sign in</button>
+        <div class="hawt-auth__alt">
+          new here? <button type="button" class="hawt-link" onclick="switchTab('register')">create an account</button>
+        </div>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form class="hawt-auth__form" id="register-form" style="display:none;" onsubmit="handleRegister(event)">
+        <label class="hawt-field">
+          <span class="hawt-field__label">name</span>
+          <input class="hawt-input" type="text" name="name" placeholder="dakota" required autocomplete="name">
+        </label>
+        <label class="hawt-field">
+          <span class="hawt-field__label">email</span>
+          <input class="hawt-input" type="email" name="email" placeholder="you@somewhere" required autocomplete="email">
+        </label>
+        <label class="hawt-field">
+          <span class="hawt-field__label">password</span>
+          <div class="hawt-pw-wrap">
+            <input class="hawt-input" id="register-pw" type="password" name="password" placeholder="min. 6 characters" required autocomplete="new-password">
+            <button type="button" class="hawt-pw-toggle" aria-label="show password" data-target="register-pw"></button>
+          </div>
+        </label>
+        <div class="auth-error" id="register-error"></div>
+        <button class="hawt-btn hawt-btn--primary hawt-auth__submit" type="submit" id="register-btn">create account</button>
+        <div class="hawt-auth__alt">
+          already in? <button type="button" class="hawt-link" onclick="switchTab('login')">sign in</button>
+        </div>
+      </form>
+
+      <div class="hawt-auth__footnote">
+        by continuing you agree to our terms. we'll never sell your email — that's not the move.
+      </div>
+    </div>
+  </div>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/cart.js"></script>
+  <script src="./js/auth.js"></script>
+  <script src="./js/passwordToggle.js"></script>
+  <script>
+    // If already logged in, go to account dashboard
+    if (API.isLoggedIn()) window.location.href = './account.html';
+
+    const params = new URLSearchParams(window.location.search);
+    const redirect = params.get('redirect') || './account.html';
+    const initTab = params.get('tab') || 'login';
+    if (initTab === 'register') switchTab('register');
+
+    function showForgotMsg() {
+      const el = document.getElementById('forgot-msg');
+      el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    }
+
+    function switchTab(tab) {
+      document.getElementById('login-form').style.display    = tab === 'login' ? 'flex' : 'none';
+      document.getElementById('register-form').style.display = tab === 'register' ? 'flex' : 'none';
+      document.getElementById('tab-login').classList.toggle('is-sel', tab === 'login');
+      document.getElementById('tab-register').classList.toggle('is-sel', tab === 'register');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('login-btn');
+      const errEl = document.getElementById('login-error');
+      const fd = new FormData(e.target);
+      btn.disabled = true; btn.textContent = 'signing in...'; errEl.textContent = '';
+      try {
+        await Auth.login(fd.get('email'), fd.get('password'));
+        window.location.href = redirect;
+      } catch (err) {
+        errEl.textContent = err.message;
+        btn.disabled = false; btn.textContent = 'sign in';
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const btn = document.getElementById('register-btn');
+      const errEl = document.getElementById('register-error');
+      const fd = new FormData(e.target);
+      btn.disabled = true; btn.textContent = 'creating account...'; errEl.textContent = '';
+      try {
+        await Auth.register(fd.get('name'), fd.get('email'), fd.get('password'));
+        window.location.href = redirect;
+      } catch (err) {
+        errEl.textContent = err.message;
+        btn.disabled = false; btn.textContent = 'create account';
+      }
+    }
+  </script>
+</body>
+</html>

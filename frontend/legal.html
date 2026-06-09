@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Legal — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .info-hero {
+      background: var(--hawt-ink); color: var(--hawt-bone);
+      padding: 100px 48px 72px;
+      display: flex; flex-direction: column; gap: 16px;
+    }
+    .info-hero__eyebrow {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--hawt-sand);
+    }
+    .info-hero__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(64px, 10vw, 140px);
+      text-transform: uppercase; line-height: 0.9;
+      letter-spacing: var(--hawt-track-display-tight);
+    }
+    .info-hero__sub {
+      font-size: 15px; color: rgba(244,241,236,0.65);
+      max-width: 520px; line-height: 1.7; margin-top: 8px;
+    }
+    .info-nav {
+      position: sticky; top: 0; z-index: 50;
+      background: var(--hawt-bone);
+      border-bottom: 1px solid var(--hawt-hairline);
+      display: flex; align-items: center; gap: 0;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .info-nav::-webkit-scrollbar { display: none; }
+    .info-nav a {
+      flex-shrink: 0;
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.14em; text-transform: uppercase;
+      color: var(--hawt-ash); text-decoration: none;
+      padding: 14px 20px;
+      border-right: 1px solid var(--hawt-hairline);
+      transition: color .15s, background .15s;
+      white-space: nowrap;
+    }
+    .info-nav a:hover { color: var(--hawt-ink); background: rgba(0,0,0,0.03); }
+    .info-section {
+      max-width: 860px; margin: 0 auto;
+      padding: 80px 48px;
+      border-bottom: 1px solid var(--hawt-hairline);
+    }
+    .info-section:last-of-type { border-bottom: none; }
+    .info-section__eyebrow {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.2em; text-transform: uppercase;
+      color: var(--hawt-sand); margin-bottom: 20px;
+    }
+    .info-section__title {
+      font-family: var(--hawt-font-display);
+      font-size: clamp(40px, 6vw, 80px);
+      text-transform: uppercase; line-height: 0.95;
+      margin-bottom: 32px;
+    }
+    .info-section__updated {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--hawt-ash); margin-bottom: 32px;
+    }
+    .info-section__body { font-size: 15px; line-height: 1.8; color: var(--hawt-ink); }
+    .info-section__body p { margin-bottom: 18px; }
+    .info-section__body p:last-child { margin-bottom: 0; }
+    .info-section__body h3 {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--hawt-ink); margin: 32px 0 10px;
+    }
+    .info-section__body ul {
+      padding-left: 20px; margin-bottom: 18px;
+    }
+    .info-section__body ul li {
+      margin-bottom: 8px; line-height: 1.7;
+    }
+    .info-section__body strong { font-weight: 600; }
+    .info-section__body a { color: var(--hawt-ink); text-decoration: underline; }
+    @media (max-width: 768px) {
+      .info-hero { padding: 72px 24px 48px; }
+      .info-section { padding: 56px 24px; }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="legal">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+        <a href="./shop.html?cat=Clearance" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">clearance</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button title="search" class="hawt-header__icon" aria-label="search"><span id="icon-search"></span></button>
+        <button title="saved" class="hawt-header__icon" aria-label="wishlist"><span id="icon-heart"></span></button>
+        <button class="hawt-header__bag" data-open-cart aria-label="open bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <a href="./account.html" id="header-account" class="hawt-header__icon" style="text-decoration:none;color:inherit;" aria-label="account"><span id="icon-user"></span></a>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <!-- HERO -->
+  <div class="info-hero">
+    <div class="info-hero__eyebrow">— the boring but important stuff</div>
+    <div class="info-hero__title">Legal</div>
+    <p class="info-hero__sub">Our policies, written in plain language. No legal jargon designed to confuse you. If something's unclear, email us.</p>
+  </div>
+
+  <!-- SECTION NAV -->
+  <nav class="info-nav" aria-label="page sections">
+    <a href="#terms-conditions">Terms &amp; Conditions</a>
+    <a href="#privacy-policy">Privacy Policy</a>
+    <a href="#shipping-policy">Shipping Policy</a>
+    <a href="#refund-policy">Refund Policy</a>
+  </nav>
+
+  <!-- TERMS & CONDITIONS -->
+  <section id="terms-conditions" class="info-section">
+    <div class="info-section__eyebrow">— 01 / terms &amp; conditions</div>
+    <h2 class="info-section__title">Terms &amp; Conditions</h2>
+    <div class="info-section__updated">Last updated: June 2026</div>
+    <div class="info-section__body">
+      <p>By accessing and using the HAWT! website (hawt.in / localhost:3000) and placing orders, you agree to the following terms. Please read them before you buy.</p>
+      <h3>Eligibility</h3>
+      <p>You must be 18 years of age or older to place an order. By completing a purchase, you confirm you meet this requirement. HAWT! reserves the right to refuse service to anyone for any reason.</p>
+      <h3>Products &amp; Availability</h3>
+      <p>All products are subject to availability. We run limited drops — when a product is marked sold out, it is sold out. We do not hold stock for pending payments. Your cart is not a reservation.</p>
+      <p>Product colours may vary slightly from images due to monitor calibration. We photograph products in natural light to represent them accurately, but cannot guarantee exact colour reproduction across all screens.</p>
+      <h3>Pricing</h3>
+      <p>All prices are in Indian Rupees (₹) and include GST. We reserve the right to change prices at any time without notice. The price charged to you is the price shown at checkout.</p>
+      <h3>Payment</h3>
+      <p>We accept UPI, credit and debit cards, and net banking via our payment gateway (Razorpay). Cash on Delivery is available on select orders above ₹499. Payment must clear before dispatch — we do not hold stock pending payment.</p>
+      <h3>Intellectual Property</h3>
+      <p>All content on this website — including product photography, graphic prints, brand name, and copy — is the exclusive property of HAWT! and may not be reproduced without written permission. Our print designs are original artworks; copying them is theft.</p>
+      <h3>Limitation of Liability</h3>
+      <p>HAWT! is not liable for indirect, incidental, or consequential damages arising from use of the website or products. Our maximum liability for any claim is the amount paid for the order in question.</p>
+      <h3>Governing Law</h3>
+      <p>These terms are governed by the laws of India, with jurisdiction in the courts of Kolkata, West Bengal.</p>
+      <h3>Changes to Terms</h3>
+      <p>We may update these terms at any time. The "last updated" date will reflect changes. Continued use of the site after changes constitutes acceptance.</p>
+      <p>Questions? Email us at <a href="mailto:legal@hawt.in">legal@hawt.in</a></p>
+    </div>
+  </section>
+
+  <!-- PRIVACY POLICY -->
+  <section id="privacy-policy" class="info-section">
+    <div class="info-section__eyebrow">— 02 / privacy policy</div>
+    <h2 class="info-section__title">Privacy Policy</h2>
+    <div class="info-section__updated">Last updated: June 2026</div>
+    <div class="info-section__body">
+      <p>We collect only what we need. We use it only to fulfil your order and improve your experience. We don't sell your data to anyone. Here's the full picture.</p>
+      <h3>What We Collect</h3>
+      <ul>
+        <li><strong>Account data:</strong> Name, email, password (hashed — we cannot read your password).</li>
+        <li><strong>Order data:</strong> Delivery address, phone number, items ordered, payment status.</li>
+        <li><strong>Usage data:</strong> Pages visited, products viewed, device and browser type (via server logs). No third-party analytics installed.</li>
+      </ul>
+      <h3>How We Use It</h3>
+      <ul>
+        <li>To process and fulfil your orders.</li>
+        <li>To send order confirmation and dispatch updates.</li>
+        <li>To notify you of restocks and new drops (only if you've opted in).</li>
+        <li>To improve the product catalogue and website based on aggregate browsing behaviour.</li>
+      </ul>
+      <h3>What We Don't Do</h3>
+      <ul>
+        <li>We do not sell or share your data with marketing agencies or advertisers.</li>
+        <li>We do not store payment card details — all card processing is handled by Razorpay on their PCI-DSS-compliant infrastructure.</li>
+        <li>We do not use cookies for tracking or retargeting ads.</li>
+      </ul>
+      <h3>Data Retention</h3>
+      <p>Order data is retained for 7 years for accounting and tax purposes (as required under Indian GST law). Account data is retained until you request deletion. You can request deletion by emailing <a href="mailto:privacy@hawt.in">privacy@hawt.in</a>.</p>
+      <h3>Third-Party Services</h3>
+      <p>We use Razorpay for payment processing. Their privacy policy is available at <a href="https://razorpay.com/privacy" target="_blank" rel="noopener">razorpay.com/privacy</a>. We use standard courier partners for delivery; your address is shared with them only to the extent necessary for delivery.</p>
+      <h3>Your Rights</h3>
+      <p>Under the Digital Personal Data Protection Act (India), you have the right to access, correct, and request deletion of your personal data. Contact us at <a href="mailto:privacy@hawt.in">privacy@hawt.in</a>.</p>
+    </div>
+  </section>
+
+  <!-- SHIPPING POLICY -->
+  <section id="shipping-policy" class="info-section">
+    <div class="info-section__eyebrow">— 03 / shipping policy</div>
+    <h2 class="info-section__title">Shipping Policy</h2>
+    <div class="info-section__updated">Last updated: June 2026</div>
+    <div class="info-section__body">
+      <h3>Processing Time</h3>
+      <p>Orders are processed within 1–2 business days of payment confirmation. Orders placed on Saturday, Sunday, or public holidays are processed the following business day.</p>
+      <h3>Delivery Timelines</h3>
+      <ul>
+        <li><strong>Kolkata:</strong> 1–2 business days after dispatch.</li>
+        <li><strong>Metro cities (Mumbai, Delhi, Bengaluru, Hyderabad, Chennai, Pune):</strong> 3–5 business days after dispatch.</li>
+        <li><strong>Rest of India:</strong> 5–8 business days after dispatch.</li>
+        <li><strong>Remote / non-serviceable pincodes:</strong> Up to 10–12 business days. We'll notify you if your pincode falls into this category.</li>
+      </ul>
+      <h3>Shipping Charges</h3>
+      <ul>
+        <li><strong>Orders above ₹2,499:</strong> Free shipping, no exceptions.</li>
+        <li><strong>Orders below ₹2,499:</strong> Flat ₹99 shipping fee, charged at checkout.</li>
+        <li><strong>Cash on Delivery:</strong> Additional ₹50 COD handling fee.</li>
+      </ul>
+      <h3>Tracking</h3>
+      <p>Once your order is dispatched, you'll receive a tracking link via email. You can also track your order directly at <a href="./orders.html">orders page</a> after logging in.</p>
+      <h3>Failed Deliveries</h3>
+      <p>If a delivery attempt fails due to an incorrect address or recipient unavailability, the courier will make two more attempts before returning the package to us. Re-dispatch will incur a fresh shipping charge. Please double-check your address before placing an order.</p>
+      <h3>Damaged in Transit</h3>
+      <p>If your order arrives visibly damaged, photograph the package before opening and contact us within 24 hours of delivery at <a href="mailto:support@hawt.in">support@hawt.in</a> with photos. We'll arrange a replacement or refund at no cost to you.</p>
+    </div>
+  </section>
+
+  <!-- REFUND POLICY -->
+  <section id="refund-policy" class="info-section">
+    <div class="info-section__eyebrow">— 04 / refund policy</div>
+    <h2 class="info-section__title">Refund Policy</h2>
+    <div class="info-section__updated">Last updated: June 2026</div>
+    <div class="info-section__body">
+      <p>We stand behind everything we make. If something's wrong with your order, we'll make it right. Here's how.</p>
+      <h3>Returns Window</h3>
+      <p>You have <strong>14 days</strong> from the date of delivery to initiate a return. Items must be unworn, unwashed, and in original condition with all tags attached.</p>
+      <h3>Non-Returnable Items</h3>
+      <ul>
+        <li>Items purchased during Clearance or Flash Sale events (marked non-returnable at checkout).</li>
+        <li>Customised or personalised items.</li>
+        <li>Accessories (hygiene reasons).</li>
+      </ul>
+      <h3>Initiating a Return</h3>
+      <p>Email <a href="mailto:returns@hawt.in">returns@hawt.in</a> with your order number and reason for return. We'll respond within 24 hours with a prepaid return label or pickup scheduling, depending on your location.</p>
+      <h3>Refund Processing</h3>
+      <ul>
+        <li><strong>Card/UPI payments:</strong> Refund to original payment method within 5–7 business days of us receiving the returned item.</li>
+        <li><strong>Cash on Delivery orders:</strong> Refund via bank transfer (NEFT). We'll collect bank details over email.</li>
+        <li><strong>Store credit:</strong> Available immediately upon return approval, if preferred over a monetary refund.</li>
+      </ul>
+      <h3>Exchanges</h3>
+      <p>We offer free size exchanges subject to availability. Initiate through the same returns email. If your required size is out of stock, we'll issue a full refund or store credit.</p>
+      <h3>Defective Items</h3>
+      <p>If you receive a defective item (manufacturing defect, wrong item, damaged in transit), we'll arrange a free replacement or full refund with no return required. Simply email us a photo within 48 hours of delivery.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="hawt-footer">
+    <div class="hawt-footer-cols5">
+      <div>
+        <div class="hawt-footer-cols5__head">About HAWT!</div>
+        <a href="/about.html#brand-story">brand story</a>
+        <a href="/about.html#why-hawt">why hawt?</a>
+        <a href="/about.html#sustainability">sustainability</a>
+        <a href="/about.html#made-in-kolkata">made in kolkata</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Help</div>
+        <a href="/support.html#track-order">track order</a>
+        <a href="/support.html#returns-exchanges">returns &amp; exchanges</a>
+        <a href="/legal.html#shipping-policy">shipping policy</a>
+        <a href="/legal.html#terms-conditions">terms &amp; conditions</a>
+        <a href="/legal.html#refund-policy">refund policy</a>
+        <a href="/legal.html#privacy-policy">privacy policy</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Services</div>
+        <a href="/support.html#franchise-enquiry">franchise enquiry</a>
+        <a href="/support.html#bulk-orders">bulk orders</a>
+        <a href="/support.html#faq">faq</a>
+        <a href="/support.html#size-guide">size guide</a>
+      </div>
+      <div>
+        <div class="hawt-footer-cols5__head">Explore</div>
+        <a href="/about.html#our-story">our story</a>
+        <a href="/about.html#events">events</a>
+        <a href="/support.html#store-locations">store locations</a>
+        <a href="/about.html#lookbook">lookbook</a>
+        <a href="/about.html#our-story">press</a>
+      </div>
+    </div>
+    <div class="hawt-footer-searches">
+      <span class="hawt-footer-searches__label">popular searches</span>
+      <a href="./shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+    </div>
+    <div class="hawt-footer__bottom">
+      <div class="hawt-footer__bottom-left">
+        <span>© hawt 2026</span>
+        <span class="hawt-footer__dot">·</span>
+        <span style="color:rgba(244,241,236,0.4);font-size:12px;">made in kolkata</span>
+      </div>
+    </div>
+    <div class="hawt-footer__wordmark">HAWT<span>!</span></div>
+  </footer>
+
+  <div id="cart-drawer" class="hawt-cart" aria-label="shopping bag" role="dialog" aria-modal="true"></div>
+  <div id="cart-overlay" class="hawt-cart-overlay"></div>
+  <footer id="cart-footer" class="hawt-cart__foot"></footer>
+  <div id="mobile-nav" class="hawt-mobile-nav" aria-hidden="true">
+    <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">×</button>
+    <nav class="hawt-mobile-nav__links">
+      <a href="./shop.html?cat=New%20In">new in</a>
+      <a href="./shop.html?cat=Sale">sale</a>
+      <a href="./shop.html?cat=Dresses">dresses</a>
+      <a href="./shop.html?cat=Shirts">shirts</a>
+      <a href="./shop.html?cat=Bottoms">bottoms</a>
+      <a href="./shop.html?cat=Co-ords">co-ords</a>
+      <a href="./shop.html?cat=Clearance">clearance</a>
+    </nav>
+  </div>
+
+  <script src="./js/utils.js"></script>
+  <script src="./js/icons.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/header.js"></script>
+  <script src="./js/cart.js"></script>
+</body>
+</html>
