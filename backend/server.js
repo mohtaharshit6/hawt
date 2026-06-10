@@ -12,6 +12,7 @@ const path     = require('path');
 const logger   = require('./utils/logger');
 
 const app = express();
+app.set('trust proxy', 1);
 
 app.use(helmet({
   contentSecurityPolicy: {
