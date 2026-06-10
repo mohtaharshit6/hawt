@@ -31,7 +31,12 @@
     .hawt-pdp__pin-result { font-size: 12px; color: var(--hawt-ash); margin-top: 6px; }
     .hawt-pdp__desc { margin: 28px 0 8px; }
     .related-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 32px; }
-    @media (max-width: 960px) { .related-grid { grid-template-columns: repeat(2,1fr); } }
+    @media (max-width: 960px) {
+      .related-grid { grid-template-columns: repeat(2,1fr); }
+      .hawt-pdp__thumbs { display: none; }
+      .hawt-pdp__gallery { display: block; }
+      .hawt-pdp__shots { width: 100%; }
+    }
   </style>
 </head>
 <body class="hawt" data-page="product">
@@ -125,12 +130,11 @@
     document.getElementById('icon-user').innerHTML   = icon('user', 18);
     document.getElementById('icon-x').innerHTML      = icon('x', 20);
   </script>
-  <script src="./js/header.js"></script>
-  <script src="./js/product.js"></script>
+  <!-- mobile-nav MUST be in DOM before header.js runs so getElementById finds it -->
   <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
     <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
     <div class="hawt-mobile-nav__panel">
-      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">�</button>
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">&times;</button>
       <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
       <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
       <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
@@ -141,5 +145,7 @@
       <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
     </div>
   </div>
+  <script src="./js/header.js"></script>
+  <script src="./js/product.js"></script>
 </body>
 </html>
