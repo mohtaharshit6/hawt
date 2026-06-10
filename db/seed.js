@@ -634,12 +634,21 @@ async function seed() {
       const slug     = `${slugify(p.name)}-${code.toLowerCase()}-${String(catIdx).padStart(3, '0')}`;
       const skuPfx   = `HWT-${code}-${String(i + 1).padStart(3, '0')}`;
 
+      // Derive flags from category and badge
+      const isNewIn    = p.category === 'New In'    || p.badge === 'new';
+      const isOnSale   = p.category === 'Sale'      || p.badge === 'sale'      || (p.sale_price != null && p.category !== 'Clearance');
+      const isClear    = p.category === 'Clearance' || p.badge === 'clearance';
+      const discPct    = (p.sale_price != null && p.base_price > 0)
+        ? Math.round((p.base_price - p.sale_price) / p.base_price * 100)
+        : 0;
+
       const { rows } = await client.query(
         `INSERT INTO products
            (name, slug, description, category, sku_prefix,
             base_price, sale_price, image_url, alt_image_url,
-            badge, sub, tags)
-         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)
+            badge, sub, tags,
+            is_new_in, is_on_sale, is_clearance, discount_percentage)
+         VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)
          RETURNING id`,
         [
           p.name,
@@ -650,10 +659,14 @@ async function seed() {
           p.base_price.toFixed(2),
           p.sale_price != null ? p.sale_price.toFixed(2) : null,
           p.image_url,
-          null,                        // alt_image_url always null
+          null,
           p.badge  || null,
           p.sub    || null,
           p.tags   || [],
+          isNewIn,
+          isOnSale,
+          isClear,
+          discPct,
         ]
       );
 
