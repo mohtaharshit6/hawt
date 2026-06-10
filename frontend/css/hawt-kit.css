@@ -631,19 +631,29 @@ img { display: block; max-width: 100%; }
   .hawt-header-wrap { color: var(--hawt-ink) !important; }
 
   /* ── PRODUCT GRID: strict uniform 2-column layout ──────────────────────── */
-  .hawt-grid--4 { grid-template-columns: repeat(2, 1fr); }
-  .hawt-grid--3 { grid-template-columns: repeat(2, 1fr); }
-  /* 16px row / 10px column gap — tighter than desktop, more breathing room than 0 */
+  .hawt-grid--4 { grid-template-columns: repeat(2, 1fr) !important; }
+  .hawt-grid--3 { grid-template-columns: repeat(2, 1fr) !important; }
   .hawt-grid { gap: 16px 10px; }
-  /* 1:1 image ratio locks every card image to the same square height regardless of source aspect */
-  .hawt-tile__image { aspect-ratio: 1 / 1; }
-  /* 2-line name clamp applied globally — ALL categories, ALL filter tabs (all, sale, clearance, etc.) */
+  /* min-width:0 prevents grid items from overflowing their cell (CSS Grid min-width:auto default) */
+  .hawt-tile { min-width: 0; }
+  /* 1:1 square image — uniform height across every card in a row */
+  .hawt-tile__image { aspect-ratio: 1 / 1 !important; }
+  /* clamp name to 2 lines max; break-word prevents long all-caps words from overflowing */
   .hawt-tile__name {
-    font-size: 14px; line-height: 1.3;
+    font-size: 13px; line-height: 1.3;
     overflow: hidden; display: -webkit-box;
     -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    overflow-wrap: break-word; word-break: break-word;
   }
-  .hawt-tile__meta { margin-top: 10px; }
+  /* price on one line, won't push name off */
+  .hawt-tile__price { font-size: 12px; white-space: nowrap; }
+  /* meta row: stack name above price instead of side-by-side on narrow columns */
+  .hawt-tile__meta {
+    margin-top: 8px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+  }
   /* Tighten section side padding so grid columns fill the viewport */
   .hawt-section { padding-left: 12px; padding-right: 12px; }
 
