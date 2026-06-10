@@ -619,10 +619,10 @@ img { display: block; max-width: 100%; }
 
   /* ── HEADER: logo far-left, icons far-right ────────────────────────────── */
   .hawt-header__nav { display: none; }
-  /* 8px side padding = elements reach physical screen edges */
-  .hawt-header { padding: 14px 8px; background: var(--hawt-bone) !important; }
-  /* Compact icon cluster on the right */
-  .hawt-header__right { gap: 4px; }
+  /* flex + space-between pins brand to left edge, icon cluster to right edge */
+  .hawt-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 6px; background: var(--hawt-bone) !important; }
+  /* 10px gap between all right-side icons */
+  .hawt-header__right { gap: 10px; }
   /* On mobile only show the bag icon — hide "bag X" text label */
   .hawt-header__bag span:last-child { display: none; }
   /* Hide the vertical divider between icons */
