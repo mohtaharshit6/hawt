@@ -61,10 +61,14 @@ exports.up = (pgm) => {
       alt_image_url TEXT,
       badge         VARCHAR(50),
       sub           VARCHAR(255),
-      tags          TEXT[]        NOT NULL DEFAULT '{}',
-      is_active     BOOLEAN       NOT NULL DEFAULT TRUE,
-      created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
-      updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()
+      tags                TEXT[]        NOT NULL DEFAULT '{}',
+      is_active           BOOLEAN       NOT NULL DEFAULT TRUE,
+      is_new_in           BOOLEAN       NOT NULL DEFAULT FALSE,
+      is_on_sale          BOOLEAN       NOT NULL DEFAULT FALSE,
+      is_clearance        BOOLEAN       NOT NULL DEFAULT FALSE,
+      discount_percentage INTEGER,
+      created_at          TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
+      updated_at          TIMESTAMPTZ   NOT NULL DEFAULT NOW()
     );
 
     -- One row per size — the unit that inventory tracks and locks
