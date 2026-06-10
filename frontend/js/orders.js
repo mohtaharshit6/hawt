@@ -21,6 +21,35 @@
     return new Date(iso).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
   }
 
+  function fmtDelivery(date) {
+    return date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  function deliveryLine(order) {
+    var status = (order.status || '').toUpperCase();
+    if (status === 'CANCELLED' || status === 'REFUNDED') return '';
+
+    var orderDate = new Date(order.created_at);
+    var estDate   = new Date(orderDate.getTime() + 4 * 24 * 60 * 60 * 1000);
+    var today     = new Date(); today.setHours(0, 0, 0, 0);
+    var estDay    = new Date(estDate); estDay.setHours(0, 0, 0, 0);
+    var estStr    = fmtDelivery(estDate);
+
+    var msg, cls;
+    if (status === 'FULFILLED') {
+      msg = 'delivered on ' + estStr;
+      cls = 'order-delivery order-delivery--done';
+    } else if (today >= estDay) {
+      msg = 'arriving a bit late — sorry for the slight delay!';
+      cls = 'order-delivery order-delivery--late';
+    } else {
+      msg = 'shipped — expected by ' + estStr;
+      cls = 'order-delivery order-delivery--transit';
+    }
+
+    return '<div class="' + cls + '">' + msg + '</div>';
+  }
+
   // ── Fetch ──────────────────────────────────────────────────────────────────
   let orderArray = [];
   try {
@@ -78,6 +107,7 @@
             '<span class="order-chip ' + statusClass + '">' + escapeHTML(status) + '</span>' +
           '</div>' +
         '</div>' +
+        deliveryLine(order) +
         '<div class="order-items">' + itemsHTML + '</div>' +
         '<div class="order-card__foot">' +
           '<span style="font-size:12px;color:var(--hawt-ash);">' + pieceCount + ' piece' + (pieceCount !== 1 ? 's' : '') + '</span>' +
@@ -140,6 +170,9 @@
     odDate.textContent  = fmtDate(order.created_at);
     odStatus.textContent = status;
     odStatus.className  = 'od-chip' + (isGreen ? ' od-chip--green' : '');
+
+    var odDelivery = document.getElementById('od-delivery');
+    if (odDelivery) odDelivery.innerHTML = deliveryLine(order);
 
     // Items
     odItems.innerHTML = (order.items || []).map(function (it) {
