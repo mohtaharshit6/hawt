@@ -619,6 +619,11 @@ img { display: block; max-width: 100%; }
   .hawt-header__nav { display: none; }
   .hawt-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .hawt-grid--3 { grid-template-columns: repeat(2, 1fr); }
+  .hawt-grid { gap: 24px 12px; }
+  /* homepage sets color:bone on header-wrap so HAWT text blends into cream bg;
+     on mobile there is no dark hero behind the header so force ink + solid bg */
+  .hawt-header-wrap { color: var(--hawt-ink) !important; }
+  .hawt-header { background: var(--hawt-bone) !important; }
   .hawt-pdp__main { grid-template-columns: 1fr; gap: 32px; }
   .hawt-pdp__info-stick { position: static; }
   .hawt-statement { grid-template-columns: 1fr; }
