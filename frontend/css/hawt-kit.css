@@ -616,17 +616,38 @@ img { display: block; max-width: 100%; }
    RESPONSIVE — light pass
    ============================================================ */
 @media (max-width: 960px) {
+
+  /* ── HEADER: logo far-left, icons far-right ────────────────────────────── */
   .hawt-header__nav { display: none; }
+  /* 8px side padding = elements reach physical screen edges */
+  .hawt-header { padding: 14px 8px; background: var(--hawt-bone) !important; }
+  /* Compact icon cluster on the right */
+  .hawt-header__right { gap: 4px; }
+  /* On mobile only show the bag icon — hide "bag X" text label */
+  .hawt-header__bag span:last-child { display: none; }
+  /* Hide the vertical divider between icons */
+  .hawt-header__divider { display: none; }
+  /* Homepage inline color:bone is corrected by JS onScroll(); !important is the CSS fallback */
+  .hawt-header-wrap { color: var(--hawt-ink) !important; }
+
+  /* ── PRODUCT GRID: strict uniform 2-column layout ──────────────────────── */
   .hawt-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .hawt-grid--3 { grid-template-columns: repeat(2, 1fr); }
-  .hawt-grid { gap: 24px 12px; }
-  /* Tile name: shrink + clamp to 2 lines so long names never break row height uniformity */
-  .hawt-tile__name { font-size: 15px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  /* 16px row / 10px column gap — tighter than desktop, more breathing room than 0 */
+  .hawt-grid { gap: 16px 10px; }
+  /* 1:1 image ratio locks every card image to the same square height regardless of source aspect */
+  .hawt-tile__image { aspect-ratio: 1 / 1; }
+  /* 2-line name clamp applied globally — ALL categories, ALL filter tabs (all, sale, clearance, etc.) */
+  .hawt-tile__name {
+    font-size: 14px; line-height: 1.3;
+    overflow: hidden; display: -webkit-box;
+    -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+  }
   .hawt-tile__meta { margin-top: 10px; }
-  /* homepage header: JS sets inline color:bone so CSS !important can't override it.
-     JS now handles mobile correctly via onScroll() — these rules are a CSS-only fallback. */
-  .hawt-header-wrap { color: var(--hawt-ink) !important; }
-  .hawt-header { background: var(--hawt-bone) !important; }
+  /* Tighten section side padding so grid columns fill the viewport */
+  .hawt-section { padding-left: 12px; padding-right: 12px; }
+
+  /* ── Other responsive resets ────────────────────────────────────────────── */
   .hawt-pdp__main { grid-template-columns: 1fr; gap: 32px; }
   .hawt-pdp__info-stick { position: static; }
   .hawt-statement { grid-template-columns: 1fr; }
