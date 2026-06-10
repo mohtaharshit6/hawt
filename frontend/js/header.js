@@ -11,13 +11,21 @@
   // Scroll: add blur to header
   function onScroll() {
     const scrolled = window.scrollY > 32;
+    const isMobile = window.innerWidth <= 960;
     if (header) {
       header.style.backdropFilter = scrolled ? 'blur(20px)' : 'none';
       if (isHome) {
-        header.style.background = scrolled
-          ? 'var(--hawt-ink-blur)'
-          : 'transparent';
-        if (wrap) wrap.style.color = scrolled ? 'var(--hawt-bone)' : 'var(--hawt-bone)';
+        if (isMobile) {
+          // On mobile the hero is below the header, not behind it.
+          // Before scroll: solid bone background + dark ink text so HAWT! is visible.
+          // After scroll: dark ink background + bone text.
+          header.style.background = scrolled ? 'var(--hawt-ink-blur)' : 'var(--hawt-bone)';
+          if (wrap) wrap.style.color = scrolled ? 'var(--hawt-bone)' : 'var(--hawt-ink)';
+        } else {
+          // Desktop: header floats over dark hero image — always bone text.
+          header.style.background = scrolled ? 'var(--hawt-ink-blur)' : 'transparent';
+          if (wrap) wrap.style.color = 'var(--hawt-bone)';
+        }
       } else {
         header.style.background = scrolled ? 'var(--hawt-bone-blur)' : 'transparent';
       }
@@ -25,6 +33,7 @@
   }
 
   window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
 
   // Cart drawer open/close

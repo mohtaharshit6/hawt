@@ -1,248 +1,248 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Orders — HAWT!</title>
-  <link rel="stylesheet" href="./css/hawt-tokens.css">
-  <link rel="stylesheet" href="./css/hawt-kit.css">
-  <style>
-    .orders-page { max-width: 860px; margin: 0 auto; padding: 60px var(--hawt-page-x) 120px; }
-    .orders-page__head { margin-bottom: 48px; }
-    .orders-page__title { font-family: var(--hawt-font-display); font-size: clamp(48px, 7vw, 96px); text-transform: uppercase; line-height: 0.9; letter-spacing: -0.01em; margin: 12px 0 0; font-weight: 400; }
-    .order-card { border: 1px solid var(--hawt-hairline); margin-bottom: 24px; cursor: pointer; transition: border-color 0.18s; }
-    .order-card:hover { border-color: var(--hawt-ink); }
-    .order-card__head { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--hawt-hairline); }
-    .order-card__num { font-family: var(--hawt-font-mono); font-size: 12px; color: var(--hawt-ash); }
-    .order-card__meta { display: flex; gap: 20px; align-items: center; }
-    .order-card__date { font-size: 12px; color: var(--hawt-ash); }
-    .order-chip { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; background: var(--hawt-ink); color: var(--hawt-bone); }
-    .order-chip--completed { background: #1a4731; }
-    .order-items { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
-    .order-item { display: grid; grid-template-columns: 72px 1fr auto; gap: 16px; align-items: center; }
-    .order-item__img { width: 72px; height: 90px; overflow: hidden; background: var(--hawt-pure); }
-    .order-item__img img { width: 100%; height: 100%; object-fit: cover; }
-    .order-item__name { font-family: var(--hawt-font-display); font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; }
-    .order-item__sub { font-size: 12px; color: var(--hawt-ash); margin-top: 3px; }
-    .order-item__price { font-family: var(--hawt-font-mono); font-size: 13px; white-space: nowrap; }
-    .order-card__foot { padding: 16px 24px; border-top: 1px solid var(--hawt-hairline); display: flex; justify-content: space-between; align-items: center; }
-    .order-card__total { font-family: var(--hawt-font-display); font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em; }
-    .orders-empty { padding: 80px 0; text-align: center; }
-    .orders-empty__title { font-family: var(--hawt-font-display); font-size: 56px; text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 16px; }
-    .success-banner { background: var(--hawt-ink); color: var(--hawt-bone); padding: 18px 24px; margin-bottom: 32px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
-    .success-banner__close { background: transparent; border: 0; color: inherit; cursor: pointer; padding: 4px; }
-
-    /* ── Order Detail Modal ─────────────────────────────────────────────────── */
-    .od-backdrop {
-      display: none;
-      position: fixed; inset: 0; z-index: 900;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      align-items: flex-start;
-      justify-content: center;
-      padding: 48px 16px 48px;
-      overflow-y: auto;
-    }
-    .od-backdrop.is-open { display: flex; }
-    .od-modal {
-      background: var(--hawt-bone, #f5f5f0);
-      width: 100%; max-width: 600px;
-      position: relative;
-      animation: od-slide-in 0.22s ease;
-    }
-    @keyframes od-slide-in {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .od-modal__close {
-      position: absolute; top: 20px; right: 20px;
-      background: transparent; border: 0; cursor: pointer;
-      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
-      color: var(--hawt-ink); opacity: 0.5; transition: opacity 0.15s;
-    }
-    .od-modal__close:hover { opacity: 1; }
-    .od-header {
-      padding: 28px 28px 20px;
-      border-bottom: 1px solid var(--hawt-hairline);
-      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
-    }
-    .od-header__id {
-      font-family: var(--hawt-font-mono); font-size: 11px;
-      color: var(--hawt-ash); letter-spacing: 0.08em; text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-    .od-header__title {
-      font-family: var(--hawt-font-display); font-size: clamp(28px, 5vw, 40px);
-      text-transform: uppercase; line-height: 0.9; letter-spacing: 0.02em; font-weight: 400;
-    }
-    .od-header__meta { display: flex; gap: 12px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
-    .od-header__date { font-size: 12px; color: var(--hawt-ash); }
-    .od-chip {
-      font-family: var(--hawt-font-mono); font-size: 10px;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      padding: 5px 10px; background: var(--hawt-ink); color: var(--hawt-bone);
-    }
-    .od-chip--green { background: #1a4731; }
-    .od-section { padding: 20px 28px; border-bottom: 1px solid var(--hawt-hairline); }
-    .od-section__label {
-      font-family: var(--hawt-font-mono); font-size: 10px;
-      letter-spacing: 0.12em; text-transform: uppercase; color: var(--hawt-ash);
-      margin-bottom: 16px;
-    }
-    .od-item { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; margin-bottom: 14px; }
-    .od-item:last-child { margin-bottom: 0; }
-    .od-item__img { width: 56px; height: 70px; overflow: hidden; background: #e8e8e4; }
-    .od-item__img img { width: 100%; height: 100%; object-fit: cover; }
-    .od-item__name { font-family: var(--hawt-font-display); font-size: 16px; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; }
-    .od-item__sub { font-size: 11px; color: var(--hawt-ash); margin-top: 3px; }
-    .od-item__price { font-family: var(--hawt-font-mono); font-size: 13px; white-space: nowrap; }
-    .od-breakdown { padding: 20px 28px 28px; }
-    .od-breakdown__label { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hawt-ash); margin-bottom: 16px; }
-    .od-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 10px; color: var(--hawt-ash); }
-    .od-row--discount { color: #1a4731; }
-    .od-row--total {
-      border-top: 1px solid var(--hawt-hairline); padding-top: 14px; margin-top: 4px;
-      font-family: var(--hawt-font-display); font-size: 22px;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      color: var(--hawt-ink); font-weight: 400;
-    }
-    @media (max-width: 600px) {
-      .od-header { padding: 20px 20px 16px; }
-      .od-section { padding: 16px 20px; }
-      .od-breakdown { padding: 16px 20px 24px; }
-      .od-modal__close { top: 14px; right: 14px; }
-    }
-  </style>
-</head>
-<body class="hawt" data-page="orders">
-
-  <!-- HEADER -->
-  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
-    <div class="hawt-announce">
-      <div class="hawt-announce__track">
-        <span>first to know — drop / 04 lands friday</span>
-        <span aria-hidden="true">·</span>
-        <span>free shipping over ₹2,499</span>
-        <span aria-hidden="true">·</span>
-        <span>14-day returns, no questions</span>
-        <span aria-hidden="true">·</span>
-        <span>first to know — drop / 04 lands friday</span>
-        <span aria-hidden="true">·</span>
-        <span>free shipping over ₹2,499</span>
-        <span aria-hidden="true">·</span>
-        <span>14-day returns, no questions</span>
-        <span aria-hidden="true">·</span>
-      </div>
-    </div>
-    <header id="main-header" class="hawt-header" style="background: transparent;">
-      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
-      <nav class="hawt-header__nav">
-        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
-        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
-        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
-        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
-        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
-        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
-        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
-      </nav>
-      <div class="hawt-header__right">
-        <button class="hawt-header__bag" aria-label="bag">
-          <span id="icon-bag"></span>
-          <span>bag <span data-cart-count></span></span>
-        </button>
-        <span class="hawt-header__divider" aria-hidden="true"></span>
-        <button id="logout-btn" class="hawt-header__icon" style="background:transparent;border:0;color:inherit;font-size:12px;letter-spacing:0.14em;text-transform:lowercase;cursor:pointer;" onclick="Auth.logout()">sign out</button>
-        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </header>
-    <!-- SECONDARY NAV ROW -->
-    <nav class="hawt-subnav" aria-label="utility navigation">
-      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="./auth.html" class="hawt-subnav__link">my account</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="./orders.html" class="hawt-subnav__link" style="color:var(--hawt-ink);">track order</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
-    </nav>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Your Orders — HAWT!</title>
+  <link rel="stylesheet" href="./css/hawt-tokens.css">
+  <link rel="stylesheet" href="./css/hawt-kit.css">
+  <style>
+    .orders-page { max-width: 860px; margin: 0 auto; padding: 60px var(--hawt-page-x) 120px; }
+    .orders-page__head { margin-bottom: 48px; }
+    .orders-page__title { font-family: var(--hawt-font-display); font-size: clamp(48px, 7vw, 96px); text-transform: uppercase; line-height: 0.9; letter-spacing: -0.01em; margin: 12px 0 0; font-weight: 400; }
+    .order-card { border: 1px solid var(--hawt-hairline); margin-bottom: 24px; cursor: pointer; transition: border-color 0.18s; }
+    .order-card:hover { border-color: var(--hawt-ink); }
+    .order-card__head { padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--hawt-hairline); }
+    .order-card__num { font-family: var(--hawt-font-mono); font-size: 12px; color: var(--hawt-ash); }
+    .order-card__meta { display: flex; gap: 20px; align-items: center; }
+    .order-card__date { font-size: 12px; color: var(--hawt-ash); }
+    .order-chip { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; padding: 6px 12px; background: var(--hawt-ink); color: var(--hawt-bone); }
+    .order-chip--completed { background: #1a4731; }
+    .order-items { padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+    .order-item { display: grid; grid-template-columns: 72px 1fr auto; gap: 16px; align-items: center; }
+    .order-item__img { width: 72px; height: 90px; overflow: hidden; background: var(--hawt-pure); }
+    .order-item__img img { width: 100%; height: 100%; object-fit: cover; }
+    .order-item__name { font-family: var(--hawt-font-display); font-size: 18px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .order-item__sub { font-size: 12px; color: var(--hawt-ash); margin-top: 3px; }
+    .order-item__price { font-family: var(--hawt-font-mono); font-size: 13px; white-space: nowrap; }
+    .order-card__foot { padding: 16px 24px; border-top: 1px solid var(--hawt-hairline); display: flex; justify-content: space-between; align-items: center; }
+    .order-card__total { font-family: var(--hawt-font-display); font-size: 22px; text-transform: uppercase; letter-spacing: 0.02em; }
+    .orders-empty { padding: 80px 0; text-align: center; }
+    .orders-empty__title { font-family: var(--hawt-font-display); font-size: 56px; text-transform: uppercase; letter-spacing: 0.02em; margin: 0 0 16px; }
+    .success-banner { background: var(--hawt-ink); color: var(--hawt-bone); padding: 18px 24px; margin-bottom: 32px; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .success-banner__close { background: transparent; border: 0; color: inherit; cursor: pointer; padding: 4px; }
+
+    /* ── Order Detail Modal ─────────────────────────────────────────────────── */
+    .od-backdrop {
+      display: none;
+      position: fixed; inset: 0; z-index: 900;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      align-items: flex-start;
+      justify-content: center;
+      padding: 48px 16px 48px;
+      overflow-y: auto;
+    }
+    .od-backdrop.is-open { display: flex; }
+    .od-modal {
+      background: var(--hawt-bone, #f5f5f0);
+      width: 100%; max-width: 600px;
+      position: relative;
+      animation: od-slide-in 0.22s ease;
+    }
+    @keyframes od-slide-in {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .od-modal__close {
+      position: absolute; top: 20px; right: 20px;
+      background: transparent; border: 0; cursor: pointer;
+      width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;
+      color: var(--hawt-ink); opacity: 0.5; transition: opacity 0.15s;
+    }
+    .od-modal__close:hover { opacity: 1; }
+    .od-header {
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--hawt-hairline);
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    }
+    .od-header__id {
+      font-family: var(--hawt-font-mono); font-size: 11px;
+      color: var(--hawt-ash); letter-spacing: 0.08em; text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .od-header__title {
+      font-family: var(--hawt-font-display); font-size: clamp(28px, 5vw, 40px);
+      text-transform: uppercase; line-height: 0.9; letter-spacing: 0.02em; font-weight: 400;
+    }
+    .od-header__meta { display: flex; gap: 12px; align-items: center; margin-top: 10px; flex-wrap: wrap; }
+    .od-header__date { font-size: 12px; color: var(--hawt-ash); }
+    .od-chip {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      padding: 5px 10px; background: var(--hawt-ink); color: var(--hawt-bone);
+    }
+    .od-chip--green { background: #1a4731; }
+    .od-section { padding: 20px 28px; border-bottom: 1px solid var(--hawt-hairline); }
+    .od-section__label {
+      font-family: var(--hawt-font-mono); font-size: 10px;
+      letter-spacing: 0.12em; text-transform: uppercase; color: var(--hawt-ash);
+      margin-bottom: 16px;
+    }
+    .od-item { display: grid; grid-template-columns: 56px 1fr auto; gap: 14px; align-items: center; margin-bottom: 14px; }
+    .od-item:last-child { margin-bottom: 0; }
+    .od-item__img { width: 56px; height: 70px; overflow: hidden; background: #e8e8e4; }
+    .od-item__img img { width: 100%; height: 100%; object-fit: cover; }
+    .od-item__name { font-family: var(--hawt-font-display); font-size: 16px; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.1; }
+    .od-item__sub { font-size: 11px; color: var(--hawt-ash); margin-top: 3px; }
+    .od-item__price { font-family: var(--hawt-font-mono); font-size: 13px; white-space: nowrap; }
+    .od-breakdown { padding: 20px 28px 28px; }
+    .od-breakdown__label { font-family: var(--hawt-font-mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--hawt-ash); margin-bottom: 16px; }
+    .od-row { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 10px; color: var(--hawt-ash); }
+    .od-row--discount { color: #1a4731; }
+    .od-row--total {
+      border-top: 1px solid var(--hawt-hairline); padding-top: 14px; margin-top: 4px;
+      font-family: var(--hawt-font-display); font-size: 22px;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--hawt-ink); font-weight: 400;
+    }
+    @media (max-width: 600px) {
+      .od-header { padding: 20px 20px 16px; }
+      .od-section { padding: 16px 20px; }
+      .od-breakdown { padding: 16px 20px 24px; }
+      .od-modal__close { top: 14px; right: 14px; }
+    }
+  </style>
+</head>
+<body class="hawt" data-page="orders">
+
+  <!-- HEADER -->
+  <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
+    <div class="hawt-announce">
+      <div class="hawt-announce__track">
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+        <span>first to know — drop / 04 lands friday</span>
+        <span aria-hidden="true">·</span>
+        <span>free shipping over ₹2,499</span>
+        <span aria-hidden="true">·</span>
+        <span>14-day returns, no questions</span>
+        <span aria-hidden="true">·</span>
+      </div>
+    </div>
+    <header id="main-header" class="hawt-header" style="background: transparent;">
+      <a href="./index.html" class="hawt-header__brand">HAWT<span class="hawt-header__dot">!</span></a>
+      <nav class="hawt-header__nav">
+        <a href="./shop.html?cat=New%20In" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">new in</a>
+        <a href="./shop.html?cat=Sale" style="text-decoration:none;color:#c0392b;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:600;">sale</a>
+        <a href="./shop.html?cat=Dresses" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">dresses</a>
+        <a href="./shop.html?cat=Shirts" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">shirts</a>
+        <a href="./shop.html?cat=Bottoms" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">bottoms</a>
+        <a href="./shop.html?cat=Co-ords" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">co-ords</a>
+        <a href="./shop.html?cat=Accessories" style="text-decoration:none;color:inherit;font-size:11px;letter-spacing:0.12em;text-transform:lowercase;font-weight:500;">accessories</a>
+      </nav>
+      <div class="hawt-header__right">
+        <button class="hawt-header__bag" aria-label="bag">
+          <span id="icon-bag"></span>
+          <span>bag <span data-cart-count></span></span>
+        </button>
+        <span class="hawt-header__divider" aria-hidden="true"></span>
+        <button id="logout-btn" class="hawt-header__icon" style="background:transparent;border:0;color:inherit;font-size:12px;letter-spacing:0.14em;text-transform:lowercase;cursor:pointer;" onclick="Auth.logout()">sign out</button>
+        <button class="hawt-hamburger" id="mobile-menu-btn" aria-label="menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </header>
+    <!-- SECONDARY NAV ROW -->
+    <nav class="hawt-subnav" aria-label="utility navigation">
+      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./auth.html" class="hawt-subnav__link">my account</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="./orders.html" class="hawt-subnav__link" style="color:var(--hawt-ink);">track order</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
+      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
+      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
+    </nav>
+  </div>
+
+  <div class="orders-page">
+    <div class="orders-page__head">
+      <div class="hawt-meta">— account</div>
+      <h1 class="orders-page__title">your orders</h1>
+    </div>
+    <div id="orders-root">
+      <div style="color:var(--hawt-ash);font-size:14px;">loading...</div>
+    </div>
+  </div>
+
+  <script src="./js/utils.js?v=999"></script>
+  <script src="./js/icons.js?v=999"></script>
+  <script src="./js/api.js?v=999"></script>
+  <script src="./js/cart.js?v=999"></script>
+  <script src="./js/auth.js?v=999"></script>
+    <!-- mobile-nav MUST be in DOM before header.js runs so getElementById finds it -->
+  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
+    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
+    <div class="hawt-mobile-nav__panel">
+      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">&times;</button>
+      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
+      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
+      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
+      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
+      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
+      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
+      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
+      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+    </div>
   </div>
-
-  <div class="orders-page">
-    <div class="orders-page__head">
-      <div class="hawt-meta">— account</div>
-      <h1 class="orders-page__title">your orders</h1>
-    </div>
-    <div id="orders-root">
-      <div style="color:var(--hawt-ash);font-size:14px;">loading...</div>
-    </div>
+  <script src="./js/header.js?v=999"></script>
+  <script>
+    document.getElementById('icon-bag').innerHTML = icon('shopping-bag', 18);
+
+    window.addEventListener('scroll', () => {
+      const h = document.getElementById('main-header');
+      if (!h) return;
+      const s = window.scrollY > 32;
+      h.style.backdropFilter = s ? 'blur(20px)' : 'none';
+      h.style.background = s ? 'var(--hawt-bone-blur)' : 'transparent';
+    }, { passive: true });
+
+    if (!API.isLoggedIn()) {
+      window.location.href = './auth.html?redirect=orders.html';
+    }
+    Cart.updateBadge();
+  </script>
+  <script src="./js/orders.js?v=1000"></script>
+  <!-- Order Detail Modal -->
+  <div class="od-backdrop" id="od-backdrop" role="dialog" aria-modal="true" aria-labelledby="od-title">
+    <div class="od-modal" id="od-modal">
+      <button class="od-modal__close" id="od-close" aria-label="close"></button>
+      <div class="od-header">
+        <div>
+          <div class="od-header__id" id="od-id"></div>
+          <div class="od-header__title" id="od-title">order details</div>
+          <div class="od-header__meta">
+            <span class="od-header__date" id="od-date"></span>
+            <span class="od-chip" id="od-status"></span>
+          </div>
+        </div>
+      </div>
+      <div class="od-section">
+        <div class="od-section__label">items</div>
+        <div id="od-items"></div>
+      </div>
+      <div class="od-breakdown">
+        <div class="od-breakdown__label">price breakdown</div>
+        <div id="od-breakdown"></div>
+      </div>
+    </div>
   </div>
-
-  <script src="./js/utils.js?v=999"></script>
-  <script src="./js/icons.js?v=999"></script>
-  <script src="./js/api.js?v=999"></script>
-  <script src="./js/cart.js?v=999"></script>
-  <script src="./js/auth.js?v=999"></script>
-  <script src="./js/header.js?v=999"></script>
-  <script>
-    document.getElementById('icon-bag').innerHTML = icon('shopping-bag', 18);
-
-    window.addEventListener('scroll', () => {
-      const h = document.getElementById('main-header');
-      if (!h) return;
-      const s = window.scrollY > 32;
-      h.style.backdropFilter = s ? 'blur(20px)' : 'none';
-      h.style.background = s ? 'var(--hawt-bone-blur)' : 'transparent';
-    }, { passive: true });
-
-    if (!API.isLoggedIn()) {
-      window.location.href = './auth.html?redirect=orders.html';
-    }
-    Cart.updateBadge();
-  </script>
-  <script src="./js/orders.js?v=1000"></script>
-  <!-- Order Detail Modal -->
-  <div class="od-backdrop" id="od-backdrop" role="dialog" aria-modal="true" aria-labelledby="od-title">
-    <div class="od-modal" id="od-modal">
-      <button class="od-modal__close" id="od-close" aria-label="close"></button>
-      <div class="od-header">
-        <div>
-          <div class="od-header__id" id="od-id"></div>
-          <div class="od-header__title" id="od-title">order details</div>
-          <div class="od-header__meta">
-            <span class="od-header__date" id="od-date"></span>
-            <span class="od-chip" id="od-status"></span>
-          </div>
-        </div>
-      </div>
-      <div class="od-section">
-        <div class="od-section__label">items</div>
-        <div id="od-items"></div>
-      </div>
-      <div class="od-breakdown">
-        <div class="od-breakdown__label">price breakdown</div>
-        <div id="od-breakdown"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
-    <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
-    <div class="hawt-mobile-nav__panel">
-      <button class="hawt-mobile-nav__close" id="mobile-nav-close" aria-label="close menu">�</button>
-      <a href="./shop.html?cat=New%20In" class="hawt-mobile-nav__link">new in</a>
-      <a href="./shop.html?cat=Dresses" class="hawt-mobile-nav__link">dresses</a>
-      <a href="./shop.html?cat=Shirts" class="hawt-mobile-nav__link">shirts</a>
-      <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
-      <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
-      <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
-      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
-      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
-    </div>
-  </div>
-</body>
-</html>
+</body>
+</html>

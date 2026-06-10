@@ -620,8 +620,11 @@ img { display: block; max-width: 100%; }
   .hawt-grid--4 { grid-template-columns: repeat(2, 1fr); }
   .hawt-grid--3 { grid-template-columns: repeat(2, 1fr); }
   .hawt-grid { gap: 24px 12px; }
-  /* homepage sets color:bone on header-wrap so HAWT text blends into cream bg;
-     on mobile there is no dark hero behind the header so force ink + solid bg */
+  /* Tile name: shrink + clamp to 2 lines so long names never break row height uniformity */
+  .hawt-tile__name { font-size: 15px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+  .hawt-tile__meta { margin-top: 10px; }
+  /* homepage header: JS sets inline color:bone so CSS !important can't override it.
+     JS now handles mobile correctly via onScroll() — these rules are a CSS-only fallback. */
   .hawt-header-wrap { color: var(--hawt-ink) !important; }
   .hawt-header { background: var(--hawt-bone) !important; }
   .hawt-pdp__main { grid-template-columns: 1fr; gap: 32px; }
