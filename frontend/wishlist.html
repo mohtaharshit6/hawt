@@ -3,15 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Shop — HAWT!</title>
+  <title>Wishlist — HAWT!</title>
   <link rel="stylesheet" href="./css/hawt-tokens.css">
   <link rel="stylesheet" href="./css/hawt-kit.css">
   <style>
-    /* Tile hover behavior is now fully handled in hawt-kit.css */
     .hawt-tile__link { display: block; text-decoration: none; color: inherit; }
+    .wish-head { padding: 40px var(--hawt-page-x) 8px; }
+    .wish-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .wish-actions .hawt-btn { flex: 1; padding: 12px; font-size: 12px; }
+    .wish-remove {
+      background: transparent; border: 1px solid var(--hawt-hairline); border-radius: 4px;
+      cursor: pointer; padding: 0 14px; color: var(--hawt-ash);
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .wish-remove:hover { border-color: var(--hawt-ink); color: var(--hawt-ink); }
+    .wish-sizes { margin-top: 10px; }
+    .wish-sizes__hint { font-size: 11px; color: var(--hawt-ash); letter-spacing: 0.1em; text-transform: lowercase; margin-bottom: 6px; }
+    .wish-sizes__row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .wish-sizes__row .hawt-chip { min-width: 44px; padding: 10px 12px; }
+    .wish-empty { padding: 80px var(--hawt-page-x); text-align: center; }
+    .wish-empty__title { font-family: var(--hawt-font-display); font-size: 40px; text-transform: uppercase; margin-bottom: 12px; }
   </style>
 </head>
-<body class="hawt" data-page="shop">
+<body class="hawt" data-page="wishlist">
 
   <!-- HEADER -->
   <div id="header-wrap" class="hawt-header-wrap" style="color: var(--hawt-ink);">
@@ -57,47 +71,18 @@
         </button>
       </div>
     </header>
-    <!-- SECONDARY NAV ROW -->
-    <nav class="hawt-subnav" aria-label="utility navigation">
-      <a href="/support.html#faq" class="hawt-subnav__link">contact us</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="./auth.html" class="hawt-subnav__link">my account</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="./orders.html" class="hawt-subnav__link">track order</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="/support.html#returns-exchanges" class="hawt-subnav__link">return / exchange</a>
-      <span class="hawt-subnav__sep" aria-hidden="true">·</span>
-      <a href="/support.html#store-locations" class="hawt-subnav__link">our stores</a>
-    </nav>
   </div>
 
-  <!-- SHOP HEAD -->
-  <section class="hawt-shop__head hawt-section hawt-section--bone" style="padding-bottom: 0;">
-    <div class="hawt-meta">— the line · drop / 03</div>
-    <h1 class="hawt-display-xl">shop everything</h1>
-    <p class="hawt-shop__sub">a small, finite line. when it's gone, it's gone.</p>
+  <!-- WISHLIST HEAD -->
+  <section class="wish-head hawt-section--bone">
+    <div class="hawt-meta">— saved for later</div>
+    <h1 class="hawt-display-xl">your wishlist</h1>
   </section>
 
-  <!-- FILTER BAR -->
-  <div class="hawt-shop__bar">
-    <div class="hawt-shop__filters">
-      <button class="hawt-pill hawt-pill--sel" data-filter="all">all</button>
-      <button class="hawt-pill" data-filter="New In">new in</button>
-      <button class="hawt-pill" data-filter="Sale" style="color:#c0392b;">sale</button>
-      <button class="hawt-pill" data-filter="Dresses">dresses</button>
-      <button class="hawt-pill" data-filter="Shirts">shirts</button>
-      <button class="hawt-pill" data-filter="Bottoms">bottoms</button>
-      <button class="hawt-pill" data-filter="Co-ords">co-ords</button>
-      <button class="hawt-pill" data-filter="Accessories">accessories</button>
-      <button class="hawt-pill" data-filter="Clearance" style="color:#c0392b;">clearance</button>
-    </div>
-    <div class="hawt-shop__count"><span id="product-count">0</span> pieces</div>
-  </div>
-
-  <!-- PRODUCT GRID -->
+  <!-- WISHLIST GRID -->
   <section class="hawt-section hawt-section--bone hawt-section--tight">
-    <div id="shop-grid" class="hawt-grid hawt-grid--3">
-      <!-- injected by shop.js -->
+    <div id="wishlist-root">
+      <div style="padding:60px var(--hawt-page-x);color:var(--hawt-ash);">loading…</div>
     </div>
   </section>
 
@@ -137,17 +122,6 @@
         <a href="/about.html#lookbook">lookbook</a>
       </div>
     </div>
-    <div class="hawt-footer-searches">
-      <span class="hawt-footer-searches__label">popular searches</span>
-      <a href="/shop.html?cat=Dresses">dresses</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html?cat=Shirts">shirts</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html?cat=Co-ords">co-ords</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html">oversized</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html">linen</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html?cat=Sale">sale</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html?cat=New%20In">new in</a><span class="hawt-footer-searches__sep">·</span>
-      <a href="/shop.html?cat=Bottoms">bottoms</a>
-    </div>
     <div class="hawt-footer__bottom">
       <div class="hawt-footer__bottom-left">
         <span>© hawt 2026</span>
@@ -172,11 +146,6 @@
     <footer id="cart-footer" class="hawt-cart__foot"></footer>
   </aside>
 
-  <style>
-    .hawt-footer__link { display:block; background:transparent; border:0; color:inherit; padding:6px 0; text-align:left; cursor:pointer; font-size:13px; letter-spacing:0.06em; text-transform:lowercase; opacity:0.85; text-decoration:none; }
-    .hawt-footer__link:hover { color: var(--hawt-sand); opacity:1; }
-  </style>
-
   <script src="./js/utils.js"></script>
   <script src="./js/icons.js"></script>
   <script src="./js/api.js"></script>
@@ -190,7 +159,7 @@
     document.getElementById('icon-user').innerHTML   = icon('user', 18);
     document.getElementById('icon-x').innerHTML      = icon('x', 20);
   </script>
-    <!-- mobile-nav MUST be in DOM before header.js runs so getElementById finds it -->
+  <!-- mobile-nav MUST be in DOM before header.js runs -->
   <div class="hawt-mobile-nav" id="mobile-nav" aria-hidden="true">
     <div class="hawt-mobile-nav__scrim" id="mobile-nav-scrim"></div>
     <div class="hawt-mobile-nav__panel">
@@ -201,11 +170,143 @@
       <a href="./shop.html?cat=Bottoms" class="hawt-mobile-nav__link">bottoms</a>
       <a href="./shop.html?cat=Co-ords" class="hawt-mobile-nav__link">co-ords</a>
       <a href="./shop.html?cat=Accessories" class="hawt-mobile-nav__link">accessories</a>
-      <a href="./shop.html?cat=Sale" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">sale</a>
-      <a href="./shop.html?cat=Clearance" class="hawt-mobile-nav__link hawt-mobile-nav__link--red">clearance</a>
+      <a href="./wishlist.html" class="hawt-mobile-nav__link">wishlist</a>
+      <a href="./orders.html" class="hawt-mobile-nav__link">orders</a>
     </div>
   </div>
   <script src="./js/header.js"></script>
-  <script src="./js/shop.js"></script>
+  <script>
+    (function () {
+      const root = document.getElementById('wishlist-root');
+
+      function priceHTML(p) {
+        return p.sale_price
+          ? `<span class="hawt-tile__price-sale">${Cart.inr(p.sale_price)}</span><span class="hawt-tile__price-orig">${Cart.inr(p.base_price)}</span>`
+          : Cart.inr(p.base_price);
+      }
+
+      function tile(p) {
+        return `
+          <div class="hawt-tile" data-wish-card="${p.id}">
+            <a href="./product.html?id=${p.id}" class="hawt-tile__link">
+              <div class="hawt-tile__image">
+                <img class="hawt-tile__img hawt-tile__img--main" src="${escapeHTML(p.image_url || '')}" alt="${escapeHTML(p.name)}">
+                ${p.badge ? `<div class="hawt-tile__badge">${escapeHTML(p.badge)}</div>` : ''}
+                ${p.discount_percentage > 0 ? `<div class="hawt-tile__disc-chip">${p.discount_percentage}% OFF</div>` : ''}
+              </div>
+            </a>
+            <div class="hawt-tile__meta">
+              <div class="hawt-tile__name">${escapeHTML(p.name)}</div>
+              <div class="hawt-tile__price">${priceHTML(p)}</div>
+            </div>
+            <div class="wish-actions">
+              <button class="hawt-btn hawt-btn--primary" id="wish-bag-${p.id}" onclick="wishPickSize('${p.id}')">move to bag</button>
+              <button class="wish-remove" onclick="wishRemove('${p.id}')" aria-label="remove from wishlist">${icon('x', 16)}</button>
+            </div>
+            <div class="wish-sizes" id="wish-sizes-${p.id}" style="display:none;"></div>
+          </div>`;
+      }
+
+      // Canonical apparel order, matching the product page.
+      const SIZE_LADDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+      const normSize = s => String(s).trim().toUpperCase().replace(/\s+/g, '');
+      const prodCache = {};
+
+      async function render() {
+        if (!API.isLoggedIn()) {
+          root.innerHTML =
+            '<div class="wish-empty">' +
+              '<div class="wish-empty__title">sign in to see your wishlist</div>' +
+              '<div style="color:var(--hawt-ash);margin-bottom:28px;">save pieces to buy later — across all your devices.</div>' +
+              '<a href="./auth.html?redirect=wishlist.html" class="hawt-btn hawt-btn--primary">sign in</a>' +
+            '</div>';
+          return;
+        }
+        let list = [];
+        try {
+          const res = await API.get('/wishlist');
+          list = Array.isArray(res?.data) ? res.data : [];
+        } catch (e) {
+          root.innerHTML = '<div style="color:#c0392b;padding:40px var(--hawt-page-x);">could not load your wishlist. ' + escapeHTML(e.message || '') + '</div>';
+          return;
+        }
+        if (!list.length) {
+          root.innerHTML =
+            '<div class="wish-empty">' +
+              '<div class="wish-empty__title">nothing saved yet</div>' +
+              '<div style="color:var(--hawt-ash);margin-bottom:28px;">tap the heart on any piece to save it here.</div>' +
+              '<a href="./shop.html" class="hawt-btn hawt-btn--primary">shop the line</a>' +
+            '</div>';
+          return;
+        }
+        root.innerHTML = '<div class="hawt-grid hawt-grid--3">' + list.map(tile).join('') + '</div>';
+      }
+
+      // Add the product to the bag and drop it from the wishlist.
+      async function moveToBag(p, size) {
+        Cart.add(p, size);
+        await Wishlist.toggle(p.id);   // remove from wishlist after moving
+        await render();
+        if (typeof openCart === 'function') openCart();
+      }
+
+      // "move to bag": one-size items go straight in; sized items reveal an
+      // inline size picker right on the card (no page jump).
+      window.wishPickSize = async function (id) {
+        const btn  = document.getElementById('wish-bag-' + id);
+        const slot = document.getElementById('wish-sizes-' + id);
+        if (btn) { btn.disabled = true; btn.textContent = 'loading…'; }
+        let p;
+        try {
+          p = prodCache[id] || (prodCache[id] = await API.get('/products/' + id));
+        } catch (e) {
+          location.href = './product.html?id=' + id;
+          return;
+        }
+        const variants = p.variants || [];
+        if (variants.length === 0) { await moveToBag(p, 'One Size'); return; }
+
+        // Build a canonical-ordered set of in-stock sizes; sold-out shown struck.
+        const bySize = {};
+        variants.forEach(v => {
+          bySize[normSize(v.size)] = { size: v.size, ats: Math.max(0, (v.stock_qty || 0) - (v.reserved_qty || 0)) };
+        });
+        const usesLadder = variants.every(v => SIZE_LADDER.includes(normSize(v.size)));
+        const order = usesLadder
+          ? SIZE_LADDER
+          : [...variants].map(v => v.size).sort((a, b) => {
+              const na = parseFloat(a), nb = parseFloat(b);
+              if (!isNaN(na) && !isNaN(nb)) return na - nb;
+              return String(a).localeCompare(String(b));
+            }).map(normSize);
+
+        const chips = order.map(label => {
+          const v = bySize[normSize(label)];
+          const out = !v || v.ats <= 0;
+          return `<button class="hawt-chip ${out ? 'hawt-chip--out' : ''}"
+            ${out ? 'disabled' : `onclick="wishAddSize('${id}','${v.size}')"`}>${label}</button>`;
+        }).join('');
+
+        if (slot) {
+          slot.innerHTML = `<div class="wish-sizes__hint">pick a size</div><div class="wish-sizes__row">${chips}</div>`;
+          slot.style.display = 'block';
+        }
+        if (btn) { btn.disabled = false; btn.textContent = 'move to bag'; }
+      };
+
+      window.wishAddSize = async function (id, size) {
+        const p = prodCache[id];
+        if (!p) return;
+        await moveToBag(p, size);
+      };
+
+      window.wishRemove = async function (id) {
+        await Wishlist.toggle(id);
+        await render();
+      };
+
+      render();
+    })();
+  </script>
 </body>
 </html>

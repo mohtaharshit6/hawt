@@ -32,9 +32,19 @@
     }
   }
 
+  // Publish the real sticky-header height so sticky elements below it
+  // (e.g. the shop filter bar) dock flush with no visible gap.
+  function syncHeaderHeight() {
+    if (!wrap) return;
+    document.documentElement.style.setProperty('--hawt-header-h', wrap.offsetHeight + 'px');
+  }
+
   window.addEventListener('scroll', onScroll, { passive: true });
   window.addEventListener('resize', onScroll, { passive: true });
+  window.addEventListener('resize', syncHeaderHeight, { passive: true });
+  window.addEventListener('load', syncHeaderHeight);
   onScroll();
+  syncHeaderHeight();
 
   // Cart drawer open/close
   function openCart() {
@@ -87,6 +97,7 @@
   // Auth state
   if (typeof Auth !== 'undefined') Auth.updateHeaderState();
   Cart.updateBadge();
+  if (typeof Wishlist !== 'undefined') Wishlist.init();
 
   // Scroll reveal
   const revealEls = document.querySelectorAll('.hawt-reveal');

@@ -69,6 +69,23 @@
     return;
   }
 
+  // ── Hide abandoned / superseded orders ──────────────────────────────────────
+  // A cancelled order here is always an abandoned/failed/superseded checkout
+  // attempt (there's no user-initiated cancel), and a PENDING_PAYMENT order
+  // left untouched for 30+ min is effectively dead (the stale-order worker
+  // cancels it). Surfacing either just clutters history with confusing
+  // duplicates — e.g. the old "one processing + one pending payment" pair.
+  var HIDE_PENDING_MIN = 30;
+  orderArray = orderArray.filter(function (o) {
+    var st = (o.status || '').toUpperCase();
+    if (st === 'CANCELLED') return false;
+    if (st === 'PENDING_PAYMENT') {
+      var ageMin = (Date.now() - new Date(o.created_at).getTime()) / 60000;
+      return ageMin < HIDE_PENDING_MIN;
+    }
+    return true;
+  });
+
   // ── Empty state ────────────────────────────────────────────────────────────
   if (!orderArray.length) {
     root.innerHTML =

@@ -50,6 +50,7 @@
             ${altImg}
             ${badge}
             ${discChip}
+            <button class="hawt-tile__wish" data-wish-id="${p.id}" onclick="tileToggleWish(event,'${p.id}')" aria-label="save to wishlist" aria-pressed="false">${icon('heart', 18)}</button>
             <div class="hawt-tile__qa">${qaContent}</div>
           </div>
         </a>
@@ -101,6 +102,7 @@
       }
     }
     if (countEl) countEl.textContent = visible.length;
+    if (typeof Wishlist !== 'undefined') Wishlist.updateHearts();
 
     // Make newly injected tiles visible (hawt-reveal starts at opacity:0)
     document.querySelectorAll('.hawt-reveal:not(.is-in)').forEach(el => {

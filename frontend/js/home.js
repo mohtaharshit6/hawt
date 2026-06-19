@@ -36,6 +36,7 @@
             <img class="hawt-tile__img hawt-tile__img--main" src="${p.image_url || ''}" alt="${p.name}">
             ${altImg}
             ${badge}
+            <button class="hawt-tile__wish" data-wish-id="${p.id}" onclick="tileToggleWish(event,'${p.id}')" aria-label="save to wishlist" aria-pressed="false">${icon('heart', 18)}</button>
             <div class="hawt-tile__qa">${qaContent}</div>
           </div>
         </a>
@@ -59,6 +60,7 @@
         </div>`;
     } else {
       featuredEl.innerHTML = featured.map(tileHTML).join('');
+      if (typeof Wishlist !== 'undefined') Wishlist.updateHearts();
     }
   }
 })();

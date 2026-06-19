@@ -117,6 +117,23 @@ async function findByUserId(userId) {
   return rows;
 }
 
+/**
+ * Find a user's currently-open (PENDING_PAYMENT) orders.
+ * Used at checkout to supersede an abandoned prior attempt before creating
+ * a new order, so a retry never leaves two orders in the history.
+ * Locks the rows (FOR UPDATE) so concurrent checkouts can't race.
+ */
+async function findOpenPendingOrders(userId, client) {
+  const { rows } = await q(
+    client,
+    `SELECT id, coupon_id FROM orders
+     WHERE user_id = $1 AND status = 'PENDING_PAYMENT'
+     FOR UPDATE`,
+    [userId]
+  );
+  return rows;
+}
+
 /** Transition an order to a new status. */
 async function updateStatus(orderId, status, client) {
   const { rows } = await q(
@@ -281,6 +298,7 @@ module.exports = {
   create,
   findById,
   findByUserId,
+  findOpenPendingOrders,
   updateStatus,
   insertItems,
   getOrderItems,

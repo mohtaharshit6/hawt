@@ -63,6 +63,17 @@ CREATE TABLE product_variants (
   UNIQUE (product_id, size)
 );
 
+-- ─── WISHLIST ─────────────────────────────────────────────────────────────────
+
+-- Products a logged-in user saves to buy later. One row per (user, product).
+CREATE TABLE wishlist_items (
+  id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id    UUID        NOT NULL REFERENCES users(id)    ON DELETE CASCADE,
+  product_id UUID        NOT NULL REFERENCES products(id) ON DELETE CASCADE,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, product_id)
+);
+
 -- ─── CART ─────────────────────────────────────────────────────────────────────
 
 CREATE TABLE carts (
@@ -213,6 +224,8 @@ CREATE INDEX idx_variants_product_id  ON product_variants(product_id);
 CREATE INDEX idx_carts_user_id        ON carts(user_id);
 CREATE INDEX idx_carts_session_id     ON carts(session_id);
 CREATE INDEX idx_cart_items_cart_id   ON cart_items(cart_id);
+
+CREATE INDEX idx_wishlist_user        ON wishlist_items(user_id);
 
 CREATE INDEX idx_orders_user_id       ON orders(user_id);
 CREATE INDEX idx_orders_status        ON orders(status);

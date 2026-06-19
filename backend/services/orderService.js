@@ -34,6 +34,34 @@ const pricingService        = require('./pricingService');
 const paymentGatewayService = require('./paymentGatewayService');
 const { serviceError }      = require('../utils/errors');
 
+/**
+ * Supersede any open (PENDING_PAYMENT) orders the user has before creating a
+ * new one. This is the fix for the "duplicate order" bug: a shopper who
+ * abandons a UPI payment (modal dismissed / verification failed) and then
+ * retries — often switching to COD — used to end up with TWO orders in their
+ * history (one stuck at PENDING_PAYMENT, one PROCESSING). By cancelling the
+ * prior pending attempt and releasing its stock + coupon at the start of every
+ * checkout, a retry always replaces the old order instead of stacking a new one.
+ *
+ * Runs inside the caller's transaction; the rows are locked FOR UPDATE.
+ */
+async function supersedePendingOrders(userId, client) {
+  const pending = await orderRepo.findOpenPendingOrders(userId, client);
+  for (const { id, coupon_id } of pending) {
+    const items = await orderRepo.getOrderItems(id, client);
+    if (items.length) {
+      await inventoryService.releaseReservations(
+        items.map(i => ({ variantId: i.variant_id, quantity: i.quantity })),
+        client
+      );
+    }
+    if (coupon_id) {
+      await couponRepo.releaseUsage(coupon_id, id, client);
+    }
+    await orderRepo.updateStatus(id, 'CANCELLED', client);
+  }
+}
+
 /** INR subtotal from cart items, using sale_price when available. */
 function computeSubtotal(cartItems) {
   return cartItems.reduce((sum, item) => {
@@ -97,6 +125,9 @@ async function checkout({ userId, couponCode = null, shippingAddress = null, pay
     let codOrder;
     try {
       await codClient.query('BEGIN');
+
+      // Cancel any abandoned pending order first so a retry never duplicates.
+      await supersedePendingOrders(userId, codClient);
 
       await inventoryService.lockAndReserve(lockItems, codClient);
 
@@ -196,6 +227,10 @@ async function checkout({ userId, couponCode = null, shippingAddress = null, pay
 
   try {
     await client.query('BEGIN');
+
+    // 0. Supersede any abandoned PENDING_PAYMENT order from a prior attempt,
+    //    releasing its stock/coupon — prevents duplicate orders on retry.
+    await supersedePendingOrders(userId, client);
 
     // 1. Acquire row-level locks + reserve stock
     await inventoryService.lockAndReserve(lockItems, client);

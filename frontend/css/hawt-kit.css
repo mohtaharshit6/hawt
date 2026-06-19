@@ -143,6 +143,37 @@ img { display: block; max-width: 100%; }
   display: inline-flex; align-items: center; justify-content: center; letter-spacing: 0;
 }
 
+/* ── WISHLIST ──────────────────────────────────────────────────────────────── */
+/* Saved state fills the heart (outline → solid red). Works on any [data-wish-id]. */
+[data-wish-id].is-saved svg { fill: #c0392b; stroke: #c0392b; }
+
+/* Heart toggle floating on a product tile image */
+.hawt-tile__image { position: relative; }
+.hawt-tile__wish {
+  position: absolute; top: 10px; right: 10px; z-index: 3;
+  width: 34px; height: 34px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,0.85); color: var(--hawt-ink);
+  border: 0; cursor: pointer; padding: 0;
+  backdrop-filter: blur(4px);
+  transition: transform var(--hawt-dur-fast) var(--hawt-ease), background var(--hawt-dur-fast) var(--hawt-ease);
+}
+.hawt-tile__wish:hover { transform: scale(1.08); background: #fff; }
+.hawt-tile__wish svg { width: 18px; height: 18px; }
+
+/* PDP "save to wishlist" button below add-to-bag */
+.hawt-pdp__wish {
+  width: 100%; margin-top: 12px; padding: 16px 36px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  background: transparent; color: var(--hawt-ink);
+  border: 1px solid var(--hawt-hairline); border-radius: 4px;
+  font-size: 12px; letter-spacing: 0.12em; text-transform: lowercase; cursor: pointer;
+  transition: border-color var(--hawt-dur-fast) var(--hawt-ease);
+}
+.hawt-pdp__wish:hover { border-color: var(--hawt-ink); }
+.hawt-pdp__wish svg { width: 16px; height: 16px; }
+.hawt-pdp__wish.is-saved { border-color: #c0392b; color: #c0392b; }
+
 /* ============================================================
    SECTIONS
    ============================================================ */
@@ -325,9 +356,9 @@ img { display: block; max-width: 100%; }
 .hawt-shop__head { padding-bottom: 48px; }
 .hawt-shop__sub { margin-top: 20px; font-size: 16px; opacity: 0.7; max-width: 50ch; }
 .hawt-shop__bar {
-  position: sticky; top: 105px; z-index: 30; background: var(--hawt-bone);
+  position: sticky; top: var(--hawt-header-h, 105px); z-index: 30; background: var(--hawt-bone);
   padding: 18px var(--hawt-page-x); display: flex; justify-content: space-between; align-items: center;
-  border-top: 1px solid var(--hawt-hairline); border-bottom: 1px solid var(--hawt-hairline);
+  border-bottom: 1px solid var(--hawt-hairline);
 }
 .hawt-shop__filters { display: flex; gap: 8px; flex-wrap: wrap; }
 .hawt-shop__count { font-family: var(--hawt-font-mono); font-size: 12px; color: var(--hawt-ash); }
@@ -553,10 +584,9 @@ img { display: block; max-width: 100%; }
 /* ============================================================
    SECONDARY NAV (CHIQUE-style subnav row)
    ============================================================ */
+/* Utility "mini nav" retired — links live in the footer now. Hidden everywhere. */
 .hawt-subnav {
-  display: flex; align-items: center; justify-content: center; flex-wrap: wrap;
-  height: 28px; padding: 0 var(--hawt-page-x); gap: 0;
-  border-top: 1px solid rgba(10,10,10,0.08);
+  display: none !important;
 }
 .hawt-subnav__link {
   font-size: 10px; letter-spacing: 0.12em; text-transform: lowercase;
@@ -669,6 +699,26 @@ img { display: block; max-width: 100%; }
   .hawt-cat--big { grid-row: auto; }
   .hawt-footer-cols5 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
   .hawt-subnav { display: none; }
+
+  /* ── FILTER BAR: single-row horizontal carousel (no wrap, no vertical bloat) ── */
+  .hawt-shop__bar { padding: 12px 6px; gap: 10px; }
+  .hawt-shop__filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;            /* Firefox */
+    -ms-overflow-style: none;         /* old Edge */
+    scroll-snap-type: x proximity;
+    gap: 8px;
+  }
+  .hawt-shop__filters::-webkit-scrollbar { display: none; }  /* WebKit */
+  .hawt-pill {
+    flex: 0 0 auto;                   /* don't shrink — keep each pill on one line */
+    white-space: nowrap;
+    padding: 8px 14px;
+    scroll-snap-align: start;
+  }
+  .hawt-shop__count { flex: 0 0 auto; white-space: nowrap; }
 }
 @media (max-width: 480px) {
   .hawt-footer-cols5 { grid-template-columns: 1fr; }

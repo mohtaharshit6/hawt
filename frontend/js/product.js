@@ -29,6 +29,22 @@
   const outOfStock = variants.filter(v => v.stock_qty - v.reserved_qty <= 0).map(v => v.size);
   const totalATS   = variants.reduce((sum, v) => sum + Math.max(0, v.stock_qty - v.reserved_qty), 0);
 
+  // Canonical apparel size order — sizes always render smallest → largest,
+  // regardless of the order they were entered in the admin portal.
+  const SIZE_LADDER = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  const normSize = s => String(s).trim().toUpperCase().replace(/\s+/g, '');
+  // Map normalized size -> { size (original label), ats } for quick lookup.
+  const variantBySize = {};
+  variants.forEach(v => {
+    variantBySize[normSize(v.size)] = {
+      size: v.size,
+      ats:  Math.max(0, (v.stock_qty || 0) - (v.reserved_qty || 0)),
+    };
+  });
+  // Use the fixed ladder only when every variant is a standard letter size.
+  // Numeric/free sizes (e.g. waist 28/30) fall back to their own sorted order.
+  const usesLadder = sizes.length > 0 && sizes.every(s => SIZE_LADDER.includes(normSize(s)));
+
   const gallery  = [product.image_url, product.alt_image_url].filter(Boolean);
   const related  = allProducts.filter(p =>
     p.id !== product.id &&
@@ -93,14 +109,34 @@
     if (!sizes.length) {
       return `<div style="font-size:12px;color:var(--hawt-ash);">one size</div>`;
     }
-    return sizes.map(s => {
-      const out = outOfStock.includes(s);
+
+    // Choose the display order:
+    //  • letter sizes  → the full canonical ladder (XS … XXL)
+    //  • other sizes   → the product's own sizes, numeric-aware sorted
+    let order;
+    if (usesLadder) {
+      order = SIZE_LADDER;
+    } else {
+      order = [...sizes].sort((a, b) => {
+        const na = parseFloat(a), nb = parseFloat(b);
+        if (!isNaN(na) && !isNaN(nb)) return na - nb;
+        return String(a).localeCompare(String(b));
+      }).map(normSize);
+    }
+
+    return order.map(label => {
+      const v        = variantBySize[normSize(label)];
+      const exists   = !!v;
+      const inStock  = exists && v.ats > 0;
+      // Missing for this product OR sold out → struck-through, not selectable.
+      const out      = !inStock;
+      const sizeAttr = exists ? v.size : label;     // real variant label when it exists
       return `<button
         class="hawt-chip ${out ? 'hawt-chip--out' : ''}"
-        data-size="${s}"
-        ${out ? 'disabled' : ''}
-        onclick="selectSize('${s}')"
-      >${s}</button>`;
+        data-size="${sizeAttr}"
+        ${out ? 'disabled aria-disabled="true"' : ''}
+        ${out ? '' : `onclick="selectSize('${sizeAttr}')"`}
+      >${label}</button>`;
     }).join('');
   }
 
@@ -119,6 +155,7 @@
             ${p.alt_image_url ? `<img class="hawt-tile__img hawt-tile__img--alt" src="${p.alt_image_url}" alt="" loading="lazy">` : ''}
             ${p.badge ? `<div class="hawt-tile__badge">${p.badge}</div>` : ''}
             ${p.discount_percentage > 0 ? `<div class="hawt-tile__disc-chip">${p.discount_percentage}% OFF</div>` : ''}
+            <button class="hawt-tile__wish" data-wish-id="${p.id}" onclick="tileToggleWish(event,'${p.id}')" aria-label="save to wishlist" aria-pressed="false">${icon('heart', 18)}</button>
             <div class="hawt-tile__qa">${qaContent}</div>
           </div>
         </a>
@@ -226,6 +263,11 @@
 
           <button class="hawt-btn hawt-btn--primary hawt-pdp__add" id="add-btn" onclick="handleAddToBag()">
             add to bag
+          </button>
+
+          <button class="hawt-pdp__wish" id="pdp-wish-btn" data-wish-id="${product.id}"
+                  onclick="handleWishToggle()" aria-pressed="false" aria-label="save to wishlist">
+            ${icon('heart', 16)}<span id="pdp-wish-label">save to wishlist</span>
           </button>
 
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:20px 0;text-align:center;">
@@ -342,6 +384,23 @@
     setTimeout(() => { btn.textContent = 'add to bag'; }, 1800);
     if (typeof openCart === 'function') openCart();
   };
+
+  // Reflect the saved label/state on the PDP heart button.
+  function syncWishLabel() {
+    const label = document.getElementById('pdp-wish-label');
+    if (label && typeof Wishlist !== 'undefined') {
+      label.textContent = Wishlist.has(product.id) ? 'saved to wishlist' : 'save to wishlist';
+    }
+  }
+
+  window.handleWishToggle = async function () {
+    if (typeof Wishlist === 'undefined') return;
+    await Wishlist.toggle(product.id);
+    syncWishLabel();
+  };
+
+  // Initial state once the PDP markup is in the DOM.
+  if (typeof Wishlist !== 'undefined') { Wishlist.refreshUI(); syncWishLabel(); }
 
   window.checkPin = function (e) {
     e.preventDefault();
