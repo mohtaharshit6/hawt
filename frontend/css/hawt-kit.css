@@ -582,24 +582,6 @@ img { display: block; max-width: 100%; }
 .hawt-footer__wordmark span { color: var(--hawt-sand); }
 
 /* ============================================================
-   SECONDARY NAV (CHIQUE-style subnav row)
-   ============================================================ */
-/* Utility "mini nav" retired — links live in the footer now. Hidden everywhere. */
-.hawt-subnav {
-  display: none !important;
-}
-.hawt-subnav__link {
-  font-size: 10px; letter-spacing: 0.12em; text-transform: lowercase;
-  color: var(--hawt-ash); text-decoration: none; padding: 0 12px;
-  white-space: nowrap; transition: color var(--hawt-dur-fast) var(--hawt-ease);
-}
-.hawt-subnav__link:hover { color: var(--hawt-ink); }
-.hawt-subnav__sep { color: var(--hawt-hairline); font-size: 10px; user-select: none; }
-[data-page="home"] .hawt-subnav__link,
-[data-page="home"] .hawt-subnav__sep { color: rgba(244,241,236,0.55); }
-[data-page="home"] .hawt-subnav__link:hover { color: var(--hawt-bone); }
-
-/* ============================================================
    FOOTER — 5-COLUMN CHIQUE STYLE
    ============================================================ */
 .hawt-footer-cols5 {
@@ -698,7 +680,6 @@ img { display: block; max-width: 100%; }
   .hawt-cats { grid-template-columns: 1fr; }
   .hawt-cat--big { grid-row: auto; }
   .hawt-footer-cols5 { grid-template-columns: repeat(2, 1fr); gap: 24px; }
-  .hawt-subnav { display: none; }
 
   /* ── FILTER BAR: single-row horizontal carousel (no wrap, no vertical bloat) ── */
   .hawt-shop__bar { padding: 12px 6px; gap: 10px; }

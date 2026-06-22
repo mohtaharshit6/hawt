@@ -119,6 +119,8 @@
     .adm-toggle-btn.is-on { background: var(--hawt-ink); color: var(--hawt-bone); border-color: var(--hawt-ink); }
     .adm-toggle-btn .toggle-dot { width: 10px; height: 10px; border-radius: 50%; background: currentColor; opacity: 0.5; }
     .adm-toggle-btn.is-on .toggle-dot { opacity: 1; }
+    /* New In and Clearance are mutually exclusive — Clearance is blurred/disabled while New In is on */
+    .adm-toggle-btn.is-disabled { opacity: 0.35; filter: blur(0.5px); pointer-events: none; cursor: not-allowed; }
     .adm-discount-row { display: none; margin-bottom: 18px; }
     .adm-discount-row.is-vis { display: block; }
     .adm-disc-hint { font-family: var(--hawt-font-mono); font-size: 10px; color: var(--hawt-ash); margin-top: 4px; }
@@ -604,6 +606,7 @@
   function setToggle(flag, on) {
     const btn = document.getElementById('toggle-' + flag);
     if (on) btn.classList.add('is-on'); else btn.classList.remove('is-on');
+    syncToggleStates();
     syncDiscountRow();
   }
   function toggleFlag(flag) {
@@ -616,7 +619,19 @@
     if (flag === 'clearance' && btn.classList.contains('is-on')) {
       document.getElementById('toggle-on-sale').classList.remove('is-on');
     }
+    // A New In product can't also be Clearance — turning New In on disables Clearance
+    if (flag === 'new-in' && btn.classList.contains('is-on')) {
+      document.getElementById('toggle-clearance').classList.remove('is-on');
+    }
+    syncToggleStates();
     syncDiscountRow();
+  }
+  // While New In is on, blur/disable the Clearance toggle so it can't be set
+  function syncToggleStates() {
+    const newInOn = document.getElementById('toggle-new-in').classList.contains('is-on');
+    const clear = document.getElementById('toggle-clearance');
+    if (newInOn) { clear.classList.remove('is-on'); clear.classList.add('is-disabled'); }
+    else { clear.classList.remove('is-disabled'); }
   }
   function syncDiscountRow() {
     const saleOn = document.getElementById('toggle-on-sale').classList.contains('is-on');
