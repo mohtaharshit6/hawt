@@ -7,7 +7,6 @@ A production-style e-commerce application for an apparel brand — built from th
 ---
 
 ## Table of Contents
-- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
@@ -18,14 +17,6 @@ A production-style e-commerce application for an apparel brand — built from th
 - [Database](#database)
 - [Testing](#testing)
 - [Deployment](#deployment)
-
----
-
-## Screenshots
-
-| Storefront | Shop / Listing | Admin Portal |
-|:---:|:---:|:---:|
-| ![Home](./ss_home_full.png) | ![Shop](./ss_shop.png) | ![Admin](./ss_admin.png) |
 
 ---
 
