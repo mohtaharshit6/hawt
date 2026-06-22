@@ -6,7 +6,24 @@ A production-style e-commerce application for an apparel brand — built from th
 
 ---
 
+## Live Demo
+
+- **Live Site:** https://hawt-di32.onrender.com/index.html
+- **Admin Portal:** https://hawt-di32.onrender.com/admin.html
+
+> Note: hosted on a free Render instance — the first request after idle may take ~30s to spin up.
+> The admin portal is login-protected and not publicly accessible, so the screenshots below show the admin experience.
+
+### Admin Portal Preview
+
+| Product Management Dashboard | Add / Edit Product |
+|:---:|:---:|
+| ![Admin products dashboard](docs/admin-products.png) | ![Add product drawer](docs/admin-add-product.png) |
+
+---
+
 ## Table of Contents
+- [Live Demo](#live-demo)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
