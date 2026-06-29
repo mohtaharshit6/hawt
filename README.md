@@ -46,7 +46,7 @@ A production-style e-commerce application for an apparel brand — built from th
 - **Wishlist** persisted per user, with heart toggles on tiles and PDP
 - **Auth** — register / login with hashed passwords and JWT sessions; password-reset tokens
 - **Order history** with dynamic delivery estimation
-- **Fully responsive** — mobile-first layout with a dedicated mobile nav
+- **Fully responsive** — mobile-first layout that adapts across mobile, tablet and desktop breakpoints, with a dedicated mobile navigation
 
 ### Admin Portal
 - Create / edit / delete products with image upload
