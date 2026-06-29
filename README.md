@@ -32,7 +32,6 @@ A production-style e-commerce application for an apparel brand — built from th
 - [Available Scripts](#available-scripts)
 - [API Overview](#api-overview)
 - [Database](#database)
-- [Testing](#testing)
 - [Deployment](#deployment)
 
 ---
@@ -69,9 +68,6 @@ A production-style e-commerce application for an apparel brand — built from th
 
 **Frontend**
 - Vanilla **HTML / CSS / JavaScript** (no framework) with a custom design system (`hawt-kit.css`)
-
-**Testing & Tooling**
-- **Playwright** for end-to-end tests
 
 ---
 
@@ -199,15 +195,6 @@ The app serves both the API and the storefront at **http://localhost:3000**.
 - Schema is managed entirely through **versioned migrations** in `db/migrations/` (dated filenames, applied via `node-pg-migrate`) — no manual schema edits.
 - `db/seed.js` populates a realistic product catalog for local development.
 - Performance indexes and an event **outbox** table are part of the migration history.
-
----
-
-## Testing
-
-End-to-end tests are written with **Playwright**:
-```bash
-npx playwright test
-```
 
 ---
 
